@@ -5,6 +5,7 @@ defmodule QueryEngine.Mixfile do
     [app: :query_engine,
      version: "0.1.0",
      elixir: "~> 1.3",
+     elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps()]
@@ -27,6 +28,10 @@ defmodule QueryEngine.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:ecto, "~> 2.0"}]
+    [{:ecto, "~> 2.0"},
+     {:postgrex, ">= 0.0.0"}]
   end
+
+  defp elixirc_paths(:prod), do: ["lib"]
+  defp elixirc_paths(_),     do: ["lib", "test/support"]
 end

@@ -3,7 +3,7 @@
 use Mix.Config
 
 config :query_engine,
-  ecto_repos: [QueryEngine.Support.Repo]
+  ecto_repos: [Dummy.Repo]
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this

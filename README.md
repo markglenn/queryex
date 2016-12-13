@@ -4,6 +4,8 @@
 
 ## Installation
 
+Install [Postgres.app](http://postgresapp.com/)
+
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
 
   1. Add `query_engine` to your list of dependencies in `mix.exs`:

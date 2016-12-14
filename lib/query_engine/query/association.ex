@@ -6,9 +6,11 @@ defmodule QueryEngine.Query.Association do
   def parse_path(path) do
     path
     |> String.split(".")
-    |> Enum.reduce({[], []}, fn(p, acc) ->
+    |> Enum.reduce({[], []}, fn(path_piece, acc) ->
+      # acc is defined as {association_list, parent_path_list}
+
       # Current path list
-      paths = [p | elem(acc, 1)]
+      paths = [path_piece | elem(acc, 1)]
 
       # Generate the full path from the accumulator's path list
       full_path =
@@ -16,10 +18,10 @@ defmodule QueryEngine.Query.Association do
         |> Enum.reverse
         |> Enum.join(".")
 
-      association = %Association{name: p, path: full_path}
+      association = %Association{name: path_piece, path: full_path}
       {[association | elem(acc, 0)], paths}
     end)
-    |> elem(0)
+    |> elem(0) # Only care about the association list, not the temporary path accumulator
     |> Enum.reverse
   end
 end

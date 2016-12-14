@@ -1,28 +1,25 @@
 defmodule QueryEngine.Query.Association do
-  defstruct [:name, :binding, :parent, :path]
+  defstruct [:name, :binding, :path]
 
   alias QueryEngine.Query.Association
 
   def parse_path(path) do
     path
     |> String.split(".")
-    |> Enum.map(&(%Association{name: &1}))
-    |> Enum.reduce([], fn(a, acc) -> [%Association{a | parent: Enum.at(acc, 0)} | acc] end)
-    |> Enum.map(&(%Association{&1 | path: Association.path(&1)}))
-    |> Enum.reverse
-    |> Enum.reduce([], fn(a, acc) -> [%Association{a | parent: Enum.at(acc, 0)} | acc] end)
-    |> Enum.reverse
-  end
+    |> Enum.reduce({[], []}, fn(p, acc) ->
+      # Current path list
+      paths = [p | elem(acc, 1)]
 
-  # Return the full path of the association
-  def path(association) do
-    do_path(association)
-    |> Enum.reverse
-    |> Enum.join(".")
-  end
+      # Generate the full path from the accumulator's path list
+      full_path =
+        paths
+        |> Enum.reverse
+        |> Enum.join(".")
 
-  defp do_path(%Association{name: name, parent: nil}), do: [name]
-  defp do_path(%Association{name: name, parent: parent}) do
-    [name | do_path(parent)]
+      association = %Association{name: p, path: full_path}
+      {[association | elem(acc, 0)], paths}
+    end)
+    |> elem(0)
+    |> Enum.reverse
   end
 end

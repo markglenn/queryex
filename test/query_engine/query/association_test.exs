@@ -25,4 +25,3 @@ defmodule QueryEngine.Query.AssociationTest do
     end
   end
 end
-

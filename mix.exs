@@ -8,14 +8,15 @@ defmodule QueryEngine.Mixfile do
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps()]
+     deps: deps(),
+     aliases: aliases()]
   end
 
   # Configuration for the OTP application
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :ecto, :postgrex],
+    [applications: [:logger, :ecto, :postgrex, :ex_machina],
      mod: {QueryEngine, []}]
   end
 
@@ -30,9 +31,14 @@ defmodule QueryEngine.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:ecto, "~> 2.0"},
-     {:postgrex, ">= 0.0.0"}]
+     {:postgrex, ">= 0.0.0"},
+     {:ex_machina, "~> 1.0"}]
+  end
+
+  defp aliases do
+    ["test": ["ecto.create --quiet", "ecto.migrate", "test"]]
   end
 
   defp elixirc_paths(:prod), do: ["lib"]
-  defp elixirc_paths(_),     do: ["lib", "test/dummy"]
+  defp elixirc_paths(_),     do: ["lib", "test/dummy", "test/support"]
 end

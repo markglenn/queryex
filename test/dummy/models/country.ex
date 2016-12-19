@@ -1,12 +1,11 @@
-defmodule Dummy.Organization do
+defmodule Dummy.Country do
   use Ecto.Schema
 
   import Ecto.Changeset
   
-  schema "organizations" do
+  schema "countries" do
     field :name, :string
-    field :website, :string
-    belongs_to :country, Dummy.Country
+    has_many :organizations, Dummy.Organization
 
     timestamps()
   end
@@ -16,9 +15,8 @@ defmodule Dummy.Organization do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :website, :country_id])
+    |> cast(params, [:name])
     |> validate_required([:name])
     |> unique_constraint(:name)
   end
 end
-

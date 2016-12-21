@@ -1,7 +1,5 @@
 defmodule QueryEngine.Engine.JoinerTest do
   use QueryEngine.ModelCase, async: true
-  require IEx
-  require QueryEngine.Engine.Joiner
 
   alias QueryEngine.Engine.Joiner
   alias QueryEngine.Query.Association

@@ -2,13 +2,19 @@ defmodule QueryEngine.Query.Field do
   alias QueryEngine.Query.Path
   alias QueryEngine.Query.Field
 
-  defstruct [:field, :association_path, :association]
+  defstruct [:column, :association_path, :association]
 
   def from_path(path) do
-    {field, association_path} = Path.parse(path)
+    {column, association_path} = Path.parse(path)
 
-    %Field{field: field, association_path: association_path}
+    case column do
+      nil -> %Field{column: nil, association_path: association_path}
+      _   -> %Field{column: String.to_atom(column), association_path: association_path}
+    end
   end
+
+  def binding(%Field{association: nil}), do: 0
+  def binding(%Field{association: association}), do: association.binding
 
   def set_association(field, associations) do
     association =

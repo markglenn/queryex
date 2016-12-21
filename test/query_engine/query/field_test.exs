@@ -5,16 +5,16 @@ defmodule QueryEngine.Query.FieldTest do
 
   describe "from_path" do
     test "parses simple field with no path" do
-      assert %Field{field: "test", association_path: nil} == Field.from_path("test")
+      assert %Field{column: :test, association_path: nil} == Field.from_path("test")
     end
 
     test "parses field with simple path" do
-      assert %Field{field: "test", association_path: "association"} ==
+      assert %Field{column: :test, association_path: "association"} ==
         Field.from_path("association.test")
     end
 
     test "parses field with dotted path" do
-      assert %Field{field: "test", association_path: "parent.association"} ==
+      assert %Field{column: :test, association_path: "parent.association"} ==
         Field.from_path("parent.association.test")
     end
   end

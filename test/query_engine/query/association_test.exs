@@ -2,22 +2,22 @@ defmodule QueryEngine.Query.AssociationTest do
   use ExUnit.Case, async: true
   alias QueryEngine.Query.Association
 
-  describe "parse_path" do
+  describe "from_path" do
     test "parses simple path" do
-      [association | []] = Association.parse_path("test")
+      [association | []] = Association.from_path("test")
 
       assert %Association{path: "test"} == association
     end
 
     test "parses path with parent" do
-      [parent | [child]] = Association.parse_path("person.organization")
+      [parent | [child]] = Association.from_path("person.organization")
 
       assert %Association{path: "person"} == parent
       assert %Association{path: "person.organization"} == child
     end
 
     test "parses path with 3 pieces" do
-      [table1 | [table2 | [table3]]] = Association.parse_path("table1.table2.table3")
+      [table1 | [table2 | [table3]]] = Association.from_path("table1.table2.table3")
 
       assert %Association{path: "table1"} == table1
       assert %Association{path: "table1.table2"} == table2
@@ -70,7 +70,7 @@ defmodule QueryEngine.Query.AssociationTest do
     test "with standard list" do
       associations =
         "a.b"
-        |> Association.parse_path
+        |> Association.from_path
         |> Association.assign_bindings
 
       assert Enum.at(associations, 0).binding == 1 

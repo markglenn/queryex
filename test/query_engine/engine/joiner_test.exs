@@ -14,7 +14,7 @@ defmodule QueryEngine.Engine.JoinerTest do
 
       associations =
         "organization"
-        |> Association.parse_path
+        |> Association.from_path
         |> Association.assign_bindings
 
       query_person =
@@ -33,7 +33,7 @@ defmodule QueryEngine.Engine.JoinerTest do
 
       associations =
         "organization.country"
-        |> Association.parse_path
+        |> Association.from_path
         |> Association.assign_bindings
 
       query_person =

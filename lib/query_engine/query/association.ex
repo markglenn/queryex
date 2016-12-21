@@ -2,16 +2,16 @@ defmodule QueryEngine.Query.Association do
   defstruct [:path, :binding, :parent_binding]
 
   alias QueryEngine.Query.Association
+  alias QueryEngine.Query.Path
 
   def name(%Association{path: ""}), do: nil
   def name(%Association{path: path}) do
-    path
-    |> String.split(".")
-    |> Enum.at(-1)
-    |> String.to_atom
+    {name, _} = Path.parse(path)
+
+    String.to_atom(name)
   end
 
-  def parse_path(path) do
+  def from_path(path) do
     path
     |> String.split(".")
     |> Enum.reduce({[], []}, fn(path_piece, acc) ->
@@ -43,15 +43,11 @@ defmodule QueryEngine.Query.Association do
 
   defp set_parent_bindings(associations) do
     Enum.map(associations, fn(association) ->
-      parent_path =
-        association.path
-        |> String.split(".")
-        |> Enum.drop(-1)
-        |> Enum.join(".")
+      {_, parent_path} = Path.parse(association.path)
 
       parent_association =
         associations
-        |> Enum.find(fn(possible_parent) -> possible_parent.path == parent_path end)
+        |> Enum.find(fn(a) -> a.path == parent_path end)
 
       case parent_association do
         nil ->

@@ -11,10 +11,16 @@ defmodule QueryEngine.Engine.FiltererTest do
   import QueryEngine.Factory
 
   describe "filter" do
-    test "with simple filter" do
+    setup do
+      email_field = Field.from_path("email")
+      id_field = Field.from_path("id")
+
+      [email_field: email_field, id_field: id_field]
+    end
+
+    test "with simple filter", %{email_field: field} do
       person = insert(:person)
-      field = Field.from_path("email")
-      filter = %Filter{field: field, operator: "=", value: person.email}
+      filter = %Filter{field: field, operator: :=, value: person.email}
 
       query =
         Dummy.Person
@@ -38,7 +44,7 @@ defmodule QueryEngine.Engine.FiltererTest do
         |> Field.from_path
         |> Field.set_association(associations)
       
-      filter = %Filter{field: field, operator: "=", value: organization.name}
+      filter = %Filter{field: field, operator: :=, value: organization.name}
 
       query =
         Dummy.Person
@@ -47,6 +53,116 @@ defmodule QueryEngine.Engine.FiltererTest do
         |> Dummy.Repo.one
 
       assert query.email == person.email
+    end
+
+    test "with !=", %{email_field: field} do
+      person = insert(:person)
+
+      # Positive test
+      filter = %Filter{field: field, operator: :!=, value: person.email <> "1"}
+      query =
+        Dummy.Person
+        |> Filterer.filter(filter)
+        |> Dummy.Repo.one
+
+      assert query.id == person.id
+
+      # Negative test
+      filter = %Filter{field: field, operator: :!=, value: person.email}
+      query =
+        Dummy.Person
+        |> Filterer.filter(filter)
+        |> Dummy.Repo.one
+
+      assert query == nil
+    end
+
+    test "with >", %{id_field: field} do
+      person = insert(:person)
+
+      # Positive test
+      filter = %Filter{field: field, operator: :>, value: person.id - 1}
+      query =
+        Dummy.Person
+        |> Filterer.filter(filter)
+        |> Dummy.Repo.one
+
+      assert query.id == person.id
+
+      # Negative test
+      filter = %Filter{field: field, operator: :>, value: person.id}
+      query =
+        Dummy.Person
+        |> Filterer.filter(filter)
+        |> Dummy.Repo.one
+
+      assert query == nil
+    end
+    
+    test "with <", %{id_field: field} do
+      person = insert(:person)
+
+      # Positive test
+      filter = %Filter{field: field, operator: :<, value: person.id + 1}
+      query =
+        Dummy.Person
+        |> Filterer.filter(filter)
+        |> Dummy.Repo.one
+
+      assert query.id == person.id
+
+      # Negative test
+      filter = %Filter{field: field, operator: :<, value: person.id}
+      query =
+        Dummy.Person
+        |> Filterer.filter(filter)
+        |> Dummy.Repo.one
+
+      assert query == nil
+    end
+
+    test "with like", %{email_field: field} do
+      person = insert(:person, email: "liketest@example.com")
+
+      # Positive test
+      filter = %Filter{field: field, operator: :like, value: "like%"}
+      query =
+        Dummy.Person
+        |> Filterer.filter(filter)
+        |> Dummy.Repo.one
+
+      assert query.id == person.id
+
+      # Negative test
+      filter = %Filter{field: field, operator: :like, value: "notlike%"}
+      query =
+        Dummy.Person
+        |> Filterer.filter(filter)
+        |> Dummy.Repo.one
+
+      assert query == nil
+    end
+
+    test "with not like", %{email_field: field} do
+      person = insert(:person, email: "liketest@example.com")
+
+      # Positive test
+      filter = %Filter{field: field, operator: :not_like, value: "notlike%"}
+      query =
+        Dummy.Person
+        |> Filterer.filter(filter)
+        |> Dummy.Repo.one
+
+      assert query.id == person.id
+
+      # Negative test
+      filter = %Filter{field: field, operator: :not_like, value: "like%"}
+      query =
+        Dummy.Person
+        |> Filterer.filter(filter)
+        |> Dummy.Repo.one
+
+      assert query == nil
     end
   end
 end

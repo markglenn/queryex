@@ -1,4 +1,7 @@
 defmodule QueryEngine.Engine.Joiner do
+  @moduledoc """
+  Provides ability to join an association to a base query
+  """
   import Ecto.Query
   alias QueryEngine.Query.Association
 

@@ -32,7 +32,9 @@ defmodule QueryEngine.Mixfile do
   defp deps do
     [{:ecto, "~> 2.0"},
      {:postgrex, ">= 0.0.0"},
-     {:ex_machina, "~> 1.0"}]
+     {:ex_machina, "~> 1.0"},
+     {:dialyxir, "~> 0.4", only: [:dev], runtime: false},
+     {:credo, "~> 0.5", only: [:dev, :test]}]
   end
 
   defp aliases do

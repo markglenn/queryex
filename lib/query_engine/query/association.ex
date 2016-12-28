@@ -1,9 +1,16 @@
 defmodule QueryEngine.Query.Association do
+  @moduledoc """
+  Provides association information between two schemas
+  """
+
   defstruct [:path, :binding, :parent_binding]
 
   alias QueryEngine.Query.Association
   alias QueryEngine.Query.Path
 
+  @doc """
+  Retrieves the name of the association from the full path
+  """
   def name(%Association{path: ""}), do: nil
   def name(%Association{path: path}) do
     {name, _} = Path.parse(path)
@@ -11,6 +18,9 @@ defmodule QueryEngine.Query.Association do
     String.to_atom(name)
   end
 
+  @doc """
+  Gennerates a list of associations from a path
+  """
   def from_path(path) do
     path
     |> String.split(".")
@@ -33,6 +43,9 @@ defmodule QueryEngine.Query.Association do
     |> Enum.reverse
   end
 
+  @doc """
+  Assigns binding keys to associations based on their order
+  """
   def assign_bindings(associations) do
     associations
     |> Enum.uniq_by(fn(a) -> a.path end)

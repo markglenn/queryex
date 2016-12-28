@@ -1,4 +1,7 @@
 defmodule QueryEngine.Engine.Filterer do
+  @moduledoc """
+  Provides filter capabilities to query with an optional association
+  """
   import Ecto.Query
   alias QueryEngine.Query.Filter
   alias QueryEngine.Query.Field

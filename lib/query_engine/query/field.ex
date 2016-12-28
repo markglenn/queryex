@@ -1,4 +1,8 @@
 defmodule QueryEngine.Query.Field do
+  @moduledoc """
+  Contains the field information including the association
+  """
+
   alias QueryEngine.Query.Path
   alias QueryEngine.Query.Field
 

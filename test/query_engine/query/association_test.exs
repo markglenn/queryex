@@ -80,4 +80,27 @@ defmodule QueryEngine.Query.AssociationTest do
       assert Enum.at(associations, 1).parent_binding == 1
     end
   end
+
+  describe "from_side_loads" do
+    test "parse single side load" do
+      assert Association.from_side_loads(["organization"]) == [:organization]
+    end
+
+    test "parse deeper side load" do
+      assert Association.from_side_loads(["organization.country"]) == [{:organization, :country}]
+    end
+
+    test "duplicates" do
+      assert Association.from_side_loads(["organization", "organization"]) == [:organization]
+    end
+    
+    test "overlapping side loads" do
+      assert Association.from_side_loads(["organization.country", "organization"]) == [{:organization, :country}]
+      assert Association.from_side_loads(["organization", "organization.country"]) == [{:organization, :country}]
+    end
+
+    test "non overlapping side loads" do
+      assert Association.from_side_loads(["organization.country", "person"]) == [{:organization, :country}, :person]
+    end
+  end
 end

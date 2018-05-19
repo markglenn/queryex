@@ -3,6 +3,7 @@ defmodule QueryEngine.Engine.Runner.Test do
 
   alias QueryEngine.Engine.Runner
   alias QueryEngine.Interface.Request
+
   alias QueryEngine.Query.Field
   alias QueryEngine.Query.Filter
   alias QueryEngine.Query.Association
@@ -17,6 +18,7 @@ defmodule QueryEngine.Engine.Runner.Test do
       response =
         %Request{schema: Dummy.Person}
         |> Runner.run
+        |> Dummy.Repo.all
 
       id = person.id
       assert [%Dummy.Person{id: ^id}] = response
@@ -28,6 +30,7 @@ defmodule QueryEngine.Engine.Runner.Test do
       response =
         %Request{schema: Dummy.Person, side_loads: ["organization.country"]}
         |> Runner.run
+        |> Dummy.Repo.all
 
       person_id = person.id
       organization_id = person.organization_id
@@ -52,6 +55,7 @@ defmodule QueryEngine.Engine.Runner.Test do
       response =
         %Request{schema: Dummy.Person, filters: [filter]}
         |> Runner.run
+        |> Dummy.Repo.all
 
       person_id = person.id
       assert [%Dummy.Person{id: ^person_id}] = response
@@ -76,6 +80,7 @@ defmodule QueryEngine.Engine.Runner.Test do
       response =
         %Request{schema: Dummy.Person, associations: associations, filters: [filter]}
         |> Runner.run
+        |> Dummy.Repo.all
 
       person_id = person.id
       assert [%Dummy.Person{id: ^person_id}] = response
@@ -92,14 +97,17 @@ defmodule QueryEngine.Engine.Runner.Test do
       response =
         %Request{schema: Dummy.Person, sorts: [order]}
         |> Runner.run
+        |> Dummy.Repo.all
         |> Enum.map(&(&1.email))
 
       assert ["a", "b"] == response
 
+      # Test in reverse
       order = %Order{field: email_field, direction: :desc}
       response =
         %Request{schema: Dummy.Person, sorts: [order]}
         |> Runner.run
+        |> Dummy.Repo.all
         |> Enum.map(&(&1.email))
 
       assert ["b", "a"] == response

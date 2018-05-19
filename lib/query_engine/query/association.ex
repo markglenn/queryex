@@ -43,6 +43,18 @@ defmodule QueryEngine.Query.Association do
     |> Enum.reverse
   end
 
+  def from_side_loads(side_loads) do
+    side_loads
+    |> Enum.reverse
+    |> Enum.map(&String.split(&1, "."))
+    |> Enum.reduce([], fn(x, acc) ->
+      x
+      |> to_side_load_list
+      |> Keyword.merge(acc, &merge_keywords/3)
+    end)
+    |> Enum.map(&clean_side_load(&1))
+  end
+
   @doc """
   Assigns binding keys to associations based on their order
   """
@@ -70,4 +82,20 @@ defmodule QueryEngine.Query.Association do
       end
     end)
   end
+
+  defp to_side_load_list([]), do: []
+  defp to_side_load_list([head | []]), do: [{String.to_atom(head), nil}]
+  defp to_side_load_list([head | tail]), do: [{String.to_atom(head), to_side_load_list(tail)}]
+
+  defp clean_side_load({left, nil}), do: left
+  defp clean_side_load({left, [{right, nil}]}), do: {left, right}
+  defp clean_side_load({left, right}) when is_list(right), do: {left, clean_side_load(right)}
+
+  defp merge_keywords(_k, left, right) when is_list(left) and is_list(right) do
+    left + right
+  end
+
+  defp merge_keywords(_k, nil, nil), do: nil
+  defp merge_keywords(_k, left, nil), do: left
+  defp merge_keywords(_k, nil, right), do: right
 end

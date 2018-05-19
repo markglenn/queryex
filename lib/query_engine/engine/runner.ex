@@ -12,7 +12,6 @@ defmodule QueryEngine.Engine.Runner do
     |> filter(filters)
     |> sort(sorts)
     |> side_load(side_loads)
-    |> Dummy.Repo.all
   end
 
   defp join(query, [head | tail]) do

@@ -4,7 +4,7 @@ defmodule QueryEngine.Mixfile do
   def project do
     [app: :query_engine,
      version: "0.1.0",
-     elixir: "~> 1.3",
+     elixir: "~> 1.6",
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -30,11 +30,11 @@ defmodule QueryEngine.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:ecto, "~> 2.0"},
+    [{:ecto, "~> 2.2"},
      {:postgrex, ">= 0.0.0"},
-     {:ex_machina, "~> 1.0"},
-     {:dialyxir, "~> 0.4", only: [:dev], runtime: false},
-     {:credo, "~> 0.5", only: [:dev, :test]}]
+     {:ex_machina, "~> 2.2", only: [:test]},
+     {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
+    ]
   end
 
   defp aliases do

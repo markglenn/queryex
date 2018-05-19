@@ -19,7 +19,7 @@ defmodule QueryEngine.Query.Association do
   end
 
   @doc """
-  Gennerates a list of associations from a path
+  Generates a list of associations from a path
   """
   def from_path(path) do
     path

@@ -17,6 +17,11 @@ defmodule QueryEngine.Query.Field do
     end
   end
 
+  def full_path(%Field{column: column, association_path: nil}), do: Atom.to_string(column)
+  def full_path(%Field{column: column, association_path: path}) do
+    "#{path}.#{Atom.to_string(column)}"
+  end
+
   def binding(%Field{association: nil}), do: 0
   def binding(%Field{association: association}), do: association.binding
 

@@ -22,8 +22,8 @@ defmodule QueryEngine.Parser.ApiParserTest do
     assert %{filters: [%Filter{value: "Test", operator: "="}]} = query
     assert %{filters: [%Filter{field: %Field{association_path: "organization", column: :name}}]} = query
 
-    assert %{orders: [%Order{direction: "asc"}]} = query
-    assert %{orders: [%Order{field: %Field{association_path: nil, column: :name}}]} = query
+    assert %{sorts: [%Order{direction: "asc"}]} = query
+    assert %{sorts: [%Order{field: %Field{association_path: nil, column: :name}}]} = query
   end
 
 end

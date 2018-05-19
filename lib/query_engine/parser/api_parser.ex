@@ -67,7 +67,7 @@ defmodule QueryEngine.Parser.ApiParser do
       |> Enum.map(&parse_order(&1, fields))
       |> Enum.reverse
 
-    %Request{ request | orders: orders }
+    %Request{ request | sorts: orders }
     |> do_parse(Map.delete(query, "orders"), fields)
   end
 

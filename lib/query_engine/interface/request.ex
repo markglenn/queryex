@@ -1,3 +1,3 @@
 defmodule QueryEngine.Interface.Request do
-  defstruct [:filters, :joins, :orders, :includes]
+  defstruct [:schema, :filters, :associations, :sorts, :side_loads]
 end

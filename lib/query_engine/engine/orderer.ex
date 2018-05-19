@@ -1,6 +1,6 @@
 defmodule QueryEngine.Engine.Orderer do
   @moduledoc """
-  Provides filter capabilities to query with an optional association
+  Provides ordering capabilities to query with an optional association
   """
   import Ecto.Query
   alias QueryEngine.Query.Order

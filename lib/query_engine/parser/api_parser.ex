@@ -80,6 +80,16 @@ defmodule QueryEngine.Parser.ApiParser do
     |> do_parse(Map.delete(query, "includes"), fields)
   end
 
+  defp do_parse(request, %{"limit" => limit} = query, fields) do
+    %Request{request | limit: limit}
+    |> do_parse(Map.delete(query, "limit"), fields)
+  end
+
+  defp do_parse(request, %{"offset" => offset} = query, fields) do
+    %Request{request | offset: offset}
+    |> do_parse(Map.delete(query, "offset"), fields)
+  end
+
   defp do_parse(request, %{}, _fields), do: request
 
   defp parse_filter(%{"operand" => operand, "operator" => operator, "value" => value}, fields) do

@@ -95,7 +95,7 @@ defmodule QueryEngine.Engine.Runner.Test do
       order = %Order{field: email_field, direction: :asc}
 
       response =
-        %Request{schema: Dummy.Person, sorts: [order]}
+        %Request{schema: Dummy.Person, sorts: [order, order]}
         |> Runner.run
         |> Dummy.Repo.all
         |> Enum.map(&(&1.email))
@@ -105,7 +105,7 @@ defmodule QueryEngine.Engine.Runner.Test do
       # Test in reverse
       order = %Order{field: email_field, direction: :desc}
       response =
-        %Request{schema: Dummy.Person, sorts: [order]}
+        %Request{schema: Dummy.Person, sorts: [order, order]}
         |> Runner.run
         |> Dummy.Repo.all
         |> Enum.map(&(&1.email))

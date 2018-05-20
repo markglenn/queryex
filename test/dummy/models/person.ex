@@ -8,6 +8,7 @@ defmodule Dummy.Person do
     field :last_name, :string
     field :email, :string
     belongs_to :organization, Dummy.Organization
+    field :__count__, :integer, virtual: true
 
     timestamps()
   end

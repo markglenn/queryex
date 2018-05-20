@@ -11,11 +11,13 @@ defmodule QueryEngine.Parser.ApiParserTest do
     assert ApiParser.parse("", Dummy.Person) == %Request{schema: Dummy.Person}
   end
 
-  test "Parses filters" do
+  test "Parses request" do
     query =
       %{
         order: [%{column: "name", direction: "asc"}],
-        filters: [%{operand: "organization.name", operator: "=", value: "Test"}]
+        filters: [%{operand: "organization.name", operator: "=", value: "Test"}],
+        limit: 5,
+        offset: 2
       }
       |> Poison.encode!
       |> ApiParser.parse(Dummy.Person)
@@ -25,6 +27,8 @@ defmodule QueryEngine.Parser.ApiParserTest do
 
     assert %Request{sorts: [%Order{direction: :asc}]} = query
     assert %Request{sorts: [%Order{field: %Field{association_path: nil, column: :name}}]} = query
+
+    assert %Request{limit: 5, offset: 2} = query
   end
 
 end

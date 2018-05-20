@@ -13,6 +13,7 @@ defmodule Integration.Query.Test do
       |> ApiParser.parse(Dummy.Person)
       |> Runner.run
       |> Dummy.Repo.one
+      |> elem(0)
 
     assert result.id == person.id
   end
@@ -29,6 +30,7 @@ defmodule Integration.Query.Test do
       |> ApiParser.parse(Dummy.Person)
       |> Runner.run
       |> Dummy.Repo.one
+      |> elem(0)
 
     assert result.id == person.id
   end
@@ -45,6 +47,7 @@ defmodule Integration.Query.Test do
       |> ApiParser.parse(Dummy.Person)
       |> Runner.run
       |> Dummy.Repo.one
+      |> elem(0)
 
     assert result.id == person.id
   end
@@ -65,6 +68,7 @@ defmodule Integration.Query.Test do
       |> ApiParser.parse(Dummy.Person)
       |> Runner.run
       |> Dummy.Repo.all
+      |> Enum.map(&elem(&1, 0))
 
     assert [person2.id, person1.id] == Enum.map(result, &(&1.id))
     assert [organization.name, organization.name] == Enum.map(result, &(&1.organization.name))

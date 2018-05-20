@@ -21,6 +21,7 @@ defmodule QueryEngine.Engine.Pager.Test do
         |> Pager.page(nil, nil)
         |> Orderer.order(sort)
         |> Dummy.Repo.all
+        |> Enum.map(&elem(&1, 0))
 
       assert length(query) == 5
     end
@@ -31,6 +32,7 @@ defmodule QueryEngine.Engine.Pager.Test do
         |> Orderer.order(sort)
         |> Pager.page(2, nil)
         |> Dummy.Repo.all
+        |> Enum.map(&elem(&1, 0))
 
       assert Enum.map(query, &(&1.id)) == Enum.map(Enum.take(people, 2), &(&1.id))
     end
@@ -41,6 +43,7 @@ defmodule QueryEngine.Engine.Pager.Test do
         |> Orderer.order(sort)
         |> Pager.page(nil, 2)
         |> Dummy.Repo.all
+        |> Enum.map(&elem(&1, 0))
 
       assert Enum.map(query, &(&1.id)) == Enum.map(Enum.drop(people, 2), &(&1.id))
     end
@@ -52,12 +55,18 @@ defmodule QueryEngine.Engine.Pager.Test do
         |> Pager.page(2, 2)
         |> Dummy.Repo.all
 
-      assert Enum.map(query, &(&1.id)) == 
+      assert Enum.map(query, &(elem(&1, 0).id)) == 
         people
         |> Enum.drop(2)
         |> Enum.take(2)
         |> Enum.map(&(&1.id))
-    end
 
+      count =
+        query
+        |> List.first
+        |> elem(1)
+
+      assert count == 5
+    end
   end
 end

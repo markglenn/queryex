@@ -18,7 +18,7 @@ defmodule QueryEngine.Engine.Runner do
     |> filter(filters)
     |> sort(sorts)
     |> side_load(side_loads)
-    |> Pager.page(limit, offset, sorts)
+    |> Pager.page(limit, offset)
   end
 
   defp default_sort([]), do: [%Order{field: %Field{column: :id}, direction: :asc}]

@@ -19,9 +19,10 @@ defmodule QueryEngine.Engine.Runner.Test do
         %Request{schema: Dummy.Person}
         |> Runner.run
         |> Dummy.Repo.all
+        |> Enum.map(&elem(&1, 0))
 
       id = person.id
-      assert [%Dummy.Person{id: ^id}] = response
+      assert [%{id: ^id}] = response
     end
 
     test "preload request" do
@@ -31,6 +32,7 @@ defmodule QueryEngine.Engine.Runner.Test do
         %Request{schema: Dummy.Person, side_loads: ["organization.country"]}
         |> Runner.run
         |> Dummy.Repo.all
+        |> Enum.map(&elem(&1, 0))
 
       person_id = person.id
       organization_id = person.organization_id
@@ -56,9 +58,10 @@ defmodule QueryEngine.Engine.Runner.Test do
         %Request{schema: Dummy.Person, filters: [filter]}
         |> Runner.run
         |> Dummy.Repo.all
+        |> Enum.map(&elem(&1, 0))
 
       person_id = person.id
-      assert [%Dummy.Person{id: ^person_id}] = response
+      assert [%{id: ^person_id}] = response
     end
 
     test "join request" do
@@ -81,9 +84,10 @@ defmodule QueryEngine.Engine.Runner.Test do
         %Request{schema: Dummy.Person, associations: associations, filters: [filter]}
         |> Runner.run
         |> Dummy.Repo.all
+        |> Enum.map(&elem(&1, 0))
 
       person_id = person.id
-      assert [%Dummy.Person{id: ^person_id}] = response
+      assert [%{id: ^person_id}] = response
     end
 
     test "order request" do
@@ -98,7 +102,7 @@ defmodule QueryEngine.Engine.Runner.Test do
         %Request{schema: Dummy.Person, sorts: [order, order]}
         |> Runner.run
         |> Dummy.Repo.all
-        |> Enum.map(&(&1.email))
+        |> Enum.map(&(elem(&1, 0).email))
 
       assert ["a", "b"] == response
 
@@ -108,6 +112,7 @@ defmodule QueryEngine.Engine.Runner.Test do
         %Request{schema: Dummy.Person, sorts: [order, order]}
         |> Runner.run
         |> Dummy.Repo.all
+        |> Enum.map(&elem(&1, 0))
         |> Enum.map(&(&1.email))
 
       assert ["b", "a"] == response

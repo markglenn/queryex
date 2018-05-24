@@ -1,16 +1,14 @@
 defmodule Integration.Query.Test do
   use QueryEngine.ModelCase, async: true
 
-  alias QueryEngine.Engine.Runner
-
   import QueryEngine.Factory
 
   test "simple request" do
     person = insert(:person)
     result =
       Dummy.Person
+      |> QueryEngine.from_schema
       |> QueryEngine.build
-      |> Runner.run
       |> Dummy.Repo.one
       |> elem(0)
 
@@ -23,9 +21,9 @@ defmodule Integration.Query.Test do
 
     result =
       Dummy.Person
-      |> QueryEngine.build
+      |> QueryEngine.from_schema
       |> QueryEngine.filter("email", :=, person.email)
-      |> Runner.run
+      |> QueryEngine.build
       |> Dummy.Repo.one
       |> elem(0)
 
@@ -38,9 +36,9 @@ defmodule Integration.Query.Test do
 
     result =
       Dummy.Person
-      |> QueryEngine.build
+      |> QueryEngine.from_schema
       |> QueryEngine.filter("organization.name", :=, "Test")
-      |> Runner.run
+      |> QueryEngine.build
       |> Dummy.Repo.one
       |> elem(0)
 
@@ -55,12 +53,12 @@ defmodule Integration.Query.Test do
 
     result =
       Dummy.Person
-      |> QueryEngine.build
+      |> QueryEngine.from_schema
       |> QueryEngine.filter("organization.name", :=, organization.name)
       |> QueryEngine.order_by("email", :desc)
       |> QueryEngine.order_by("organization.name", :asc)
       |> QueryEngine.side_load("organization")
-      |> Runner.run
+      |> QueryEngine.build
       |> Dummy.Repo.all
       |> Enum.map(&elem(&1, 0))
 

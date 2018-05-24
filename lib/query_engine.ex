@@ -3,20 +3,21 @@ defmodule QueryEngine do
   QueryEngine application
 
   MyModels.User
-    |> QueryEngine.build
+    |> QueryEngine.from_schema
     |> QueryEngine.side_load("organization.country")
     |> QueryEngine.filter("name", :like, "John D%")
     |> QueryEngine.filter("organization.name", :=, "Test Organization")
     |> QueryEngine.order_by("organization.name", :desc)
     |> QueryEngine.page(10, 20)
-    |> QueryEngine.request
+    |> QueryEngine.build
   """
 
   alias QueryEngine.Interface.Request
   alias QueryEngine.Query.Filter
   alias QueryEngine.Query.Order
+  alias QueryEngine.Engine.Builder
 
-  def build(schema) do
+  def from_schema(schema) do
     %Request{schema: schema}
   end
 
@@ -41,7 +42,5 @@ defmodule QueryEngine do
 
   def page(%Request{} = request, limit, offset), do: %{request | limit: limit, offset: offset}
 
-  def generate(%Request{} = _request) do
-
-  end
+  def build(%Request{} = request), do: Builder.build(request)
 end

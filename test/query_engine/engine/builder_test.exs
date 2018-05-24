@@ -1,7 +1,7 @@
-defmodule QueryEngine.Engine.Runner.Test do
+defmodule QueryEngine.Engine.Builder.Test do
   use QueryEngine.ModelCase, async: true
 
-  alias QueryEngine.Engine.Runner
+  alias QueryEngine.Engine.Builder
   alias QueryEngine.Interface.Request
 
   alias QueryEngine.Query.Filter
@@ -9,13 +9,13 @@ defmodule QueryEngine.Engine.Runner.Test do
 
   import QueryEngine.Factory
 
-  describe "run" do
+  describe "build" do
     test "empty request" do
       person = insert(:person)
 
       response =
         %Request{schema: Dummy.Person}
-        |> Runner.run
+        |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&elem(&1, 0))
 
@@ -28,7 +28,7 @@ defmodule QueryEngine.Engine.Runner.Test do
 
       response =
         %Request{schema: Dummy.Person, side_loads: ["organization.country"]}
-        |> Runner.run
+        |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&elem(&1, 0))
 
@@ -53,7 +53,7 @@ defmodule QueryEngine.Engine.Runner.Test do
 
       response =
         %Request{schema: Dummy.Person, filters: [filter]}
-        |> Runner.run
+        |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&elem(&1, 0))
 
@@ -64,12 +64,12 @@ defmodule QueryEngine.Engine.Runner.Test do
     test "join request" do
       person = insert(:person)
       insert(:person)
-      
+
       filter = %Filter{field: "organization.name", operator: :=, value: person.organization.name}
 
       response =
         %Request{schema: Dummy.Person, filters: [filter]}
-        |> Runner.run
+        |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&elem(&1, 0))
 
@@ -85,7 +85,7 @@ defmodule QueryEngine.Engine.Runner.Test do
 
       response =
         %Request{schema: Dummy.Person, sorts: [order, order]}
-        |> Runner.run
+        |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&(elem(&1, 0).email))
 
@@ -95,7 +95,7 @@ defmodule QueryEngine.Engine.Runner.Test do
       order = %Order{field: "email", direction: :desc}
       response =
         %Request{schema: Dummy.Person, sorts: [order, order]}
-        |> Runner.run
+        |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&elem(&1, 0))
         |> Enum.map(&(&1.email))

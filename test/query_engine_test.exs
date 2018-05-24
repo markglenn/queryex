@@ -8,7 +8,7 @@ defmodule QueryEngineTest do
 
   describe "build" do
     test "set the schema" do
-      assert %Request{schema: Dummy.User} == QueryEngine.build(Dummy.User)
+      assert %Request{schema: Dummy.User} == QueryEngine.from_schema(Dummy.User)
     end
   end
 
@@ -16,7 +16,7 @@ defmodule QueryEngineTest do
     test "set a single filter" do
       request =
         Dummy.User
-        |> QueryEngine.build
+        |> QueryEngine.from_schema
         |> QueryEngine.filter("table.column", :=, "test")
 
       assert %Request{filters: [%Filter{field: "table.column", operator: :=, value: "test"}]} = request
@@ -25,7 +25,7 @@ defmodule QueryEngineTest do
     test "set multiple filters" do
       filters =
         Dummy.User
-        |> QueryEngine.build
+        |> QueryEngine.from_schema
         |> QueryEngine.filter("table.column", :=, "test")
         |> QueryEngine.filter("column", :like, "test%")
         |> Map.get(:filters)
@@ -41,7 +41,7 @@ defmodule QueryEngineTest do
     test "set sort" do
       sorts =
         Dummy.User
-        |> QueryEngine.build
+        |> QueryEngine.from_schema
         |> QueryEngine.order_by("table.column", :asc)
         |> Map.get(:sorts)
 
@@ -51,7 +51,7 @@ defmodule QueryEngineTest do
     test "set multiple sorts" do
       sorts =
         Dummy.User
-        |> QueryEngine.build
+        |> QueryEngine.from_schema
         |> QueryEngine.order_by("table.column", :asc)
         |> QueryEngine.order_by("column", :desc)
         |> Map.get(:sorts)
@@ -64,7 +64,7 @@ defmodule QueryEngineTest do
     test "set side load" do
       side_loads =
         Dummy.User
-        |> QueryEngine.build
+        |> QueryEngine.from_schema
         |> QueryEngine.side_load("table")
         |> Map.get(:side_loads)
 
@@ -74,7 +74,7 @@ defmodule QueryEngineTest do
     test "set multiple sorts" do
       side_loads =
         Dummy.User
-        |> QueryEngine.build
+        |> QueryEngine.from_schema
         |> QueryEngine.side_load("table1")
         |> QueryEngine.side_load("table2")
         |> Map.get(:side_loads)
@@ -87,7 +87,7 @@ defmodule QueryEngineTest do
     test "set limit and offset" do
       request =
         Dummy.User
-        |> QueryEngine.build
+        |> QueryEngine.from_schema
         |> QueryEngine.page(10, 20)
 
       assert %Request{limit: 10, offset: 20} = request
@@ -96,7 +96,7 @@ defmodule QueryEngineTest do
     test "set multiple sorts" do
       side_loads =
         Dummy.User
-        |> QueryEngine.build
+        |> QueryEngine.from_schema
         |> QueryEngine.side_load("table1")
         |> QueryEngine.side_load("table2")
         |> Map.get(:side_loads)

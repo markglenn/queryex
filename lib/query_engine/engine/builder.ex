@@ -1,4 +1,4 @@
-defmodule QueryEngine.Engine.Runner do
+defmodule QueryEngine.Engine.Builder do
   alias QueryEngine.Interface.Request
 
   alias QueryEngine.Engine.Filterer
@@ -10,15 +10,15 @@ defmodule QueryEngine.Engine.Runner do
   alias QueryEngine.Query.Field
   alias QueryEngine.Query.Order
 
-  def run(%Request{sorts: nil} = request), do: run(%{request | sorts: []})
-  def run(%Request{sorts: []} = request), do: run(%{request | sorts: [%Order{field: "id", direction: :asc}]})
-  def run(%Request{associations: nil} = request) do
+  def build(%Request{sorts: nil} = request), do: build(%{request | sorts: []})
+  def build(%Request{sorts: []} = request), do: build(%{request | sorts: [%Order{field: "id", direction: :asc}]})
+  def build(%Request{associations: nil} = request) do
     request
     |> Request.set_associations
-    |> do_run
+    |> do_build
   end
 
-  defp do_run(%Request{} = request) do
+  defp do_build(%Request{} = request) do
     request.schema
     |> join(request.associations)
     |> filter(request.filters)

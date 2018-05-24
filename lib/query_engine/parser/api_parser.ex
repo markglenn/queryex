@@ -25,7 +25,7 @@ defmodule QueryEngine.Parser.ApiParser do
     [
       do_parse_fields([], Enum.map(query["filters"] || [], &(&1["operand"]))),
       do_parse_fields([], Enum.map(query["order"] || [], &(&1["column"]))),
-      do_parse_fields([], query["includes"] || [] )
+      do_parse_fields([], query["includes"] || [])
     ]
     |> List.flatten
     |> Enum.uniq

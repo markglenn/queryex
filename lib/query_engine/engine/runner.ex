@@ -10,9 +10,9 @@ defmodule QueryEngine.Engine.Runner do
   alias QueryEngine.Query.Field
   alias QueryEngine.Query.Order
 
+  def run(%Request{sorts: nil} = request), do: run(%{request | sorts: []})
+  def run(%Request{sorts: []} = request), do: run(%{request | sorts: [%Order{field: %Field{column: :id}, direction: :asc}]})
   def run(%Request{schema: schema, filters: filters, associations: associations, sorts: sorts, side_loads: side_loads, limit: limit, offset: offset}) do
-    sorts = default_sort(sorts)
-
     schema
     |> join(associations)
     |> filter(filters)
@@ -20,9 +20,6 @@ defmodule QueryEngine.Engine.Runner do
     |> side_load(side_loads)
     |> Pager.page(limit, offset)
   end
-
-  defp default_sort([]), do: [%Order{field: %Field{column: :id}, direction: :asc}]
-  defp default_sort(list), do: list
 
   defp join(query, [head | tail]) do
     query

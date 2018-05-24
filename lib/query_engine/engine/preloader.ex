@@ -9,8 +9,4 @@ defmodule QueryEngine.Engine.Preloader do
     query
     |> preload(^preload_path)
   end
-
-  defp list_to_keyword_list([]), do: nil
-  defp list_to_keyword_list([head | []]), do: String.to_atom(head)
-  defp list_to_keyword_list([head | tail]), do: [{String.to_atom(head), list_to_keyword_list(tail)}]
 end

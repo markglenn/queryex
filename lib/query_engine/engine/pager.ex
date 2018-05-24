@@ -10,6 +10,6 @@ defmodule QueryEngine.Engine.Pager do
 
   defp include_count(query) do
     query
-    |> select([m: 0], {m, fragment("count(*) OVER() AS __count__")})
+    |> select([m: 0], {m, fragment("count(1) OVER() AS __count__")})
   end
 end

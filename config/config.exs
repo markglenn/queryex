@@ -2,9 +2,6 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-config :query_engine,
-  ecto_repos: [Dummy.Repo]
-
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,
@@ -31,4 +28,6 @@ config :query_engine,
 # here (which is why it is important to import them last).
 #
 
-import_config "#{Mix.env}.exs"
+if Mix.env == :test do
+  import_config "#{Mix.env}.exs"
+end

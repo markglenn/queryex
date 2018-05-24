@@ -1,5 +1,8 @@
 use Mix.Config
 
+config :query_engine,
+  ecto_repos: [Dummy.Repo]
+
 config :logger, level: :warn
 
 # Configure your database

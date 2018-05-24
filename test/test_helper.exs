@@ -2,4 +2,5 @@
 
 ExUnit.start
 
+{:ok, _pid} = Dummy.Repo.start_link
 Ecto.Adapters.SQL.Sandbox.mode(Dummy.Repo, :manual)

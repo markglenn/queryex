@@ -40,4 +40,8 @@ defmodule QueryEngine do
   end
 
   def page(%Request{} = request, limit, offset), do: %{request | limit: limit, offset: offset}
+
+  def generate(%Request{} = _request) do
+
+  end
 end

@@ -4,9 +4,7 @@ defmodule QueryEngine.Engine.Runner.Test do
   alias QueryEngine.Engine.Runner
   alias QueryEngine.Interface.Request
 
-  alias QueryEngine.Query.Field
   alias QueryEngine.Query.Filter
-  alias QueryEngine.Query.Association
   alias QueryEngine.Query.Order
 
   import QueryEngine.Factory
@@ -48,8 +46,7 @@ defmodule QueryEngine.Engine.Runner.Test do
     end
 
     test "filter request" do
-      email_field = Field.from_path("email")
-      filter = %Filter{field: email_field, operator: :=, value: "a"}
+      filter = %Filter{field: "email", operator: :=, value: "a"}
 
       person = insert(:person, email: "a")
       insert(:person, email: "b")
@@ -67,21 +64,11 @@ defmodule QueryEngine.Engine.Runner.Test do
     test "join request" do
       person = insert(:person)
       insert(:person)
-
-      associations =
-        "organization"
-        |> Association.from_path
-        |> Association.assign_bindings
-
-      field =
-        "organization.name"
-        |> Field.from_path
-        |> Field.set_association(associations)
       
-      filter = %Filter{field: field, operator: :=, value: person.organization.name}
+      filter = %Filter{field: "organization.name", operator: :=, value: person.organization.name}
 
       response =
-        %Request{schema: Dummy.Person, associations: associations, filters: [filter]}
+        %Request{schema: Dummy.Person, filters: [filter]}
         |> Runner.run
         |> Dummy.Repo.all
         |> Enum.map(&elem(&1, 0))
@@ -94,9 +81,7 @@ defmodule QueryEngine.Engine.Runner.Test do
       insert(:person, email: "b")
       insert(:person, email: "a")
 
-      email_field = Field.from_path("email")
-
-      order = %Order{field: email_field, direction: :asc}
+      order = %Order{field: "email", direction: :asc}
 
       response =
         %Request{schema: Dummy.Person, sorts: [order, order]}
@@ -107,7 +92,7 @@ defmodule QueryEngine.Engine.Runner.Test do
       assert ["a", "b"] == response
 
       # Test in reverse
-      order = %Order{field: email_field, direction: :desc}
+      order = %Order{field: "email", direction: :desc}
       response =
         %Request{schema: Dummy.Person, sorts: [order, order]}
         |> Runner.run

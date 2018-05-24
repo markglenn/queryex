@@ -1,7 +1,6 @@
 defmodule Integration.Query.Test do
   use QueryEngine.ModelCase, async: true
 
-  alias QueryEngine.Parser.ApiParser
   alias QueryEngine.Engine.Runner
 
   import QueryEngine.Factory
@@ -9,8 +8,8 @@ defmodule Integration.Query.Test do
   test "simple request" do
     person = insert(:person)
     result =
-      ""
-      |> ApiParser.parse(Dummy.Person)
+      Dummy.Person
+      |> QueryEngine.build
       |> Runner.run
       |> Dummy.Repo.one
       |> elem(0)
@@ -23,11 +22,9 @@ defmodule Integration.Query.Test do
     insert(:person)
 
     result =
-      %{
-        filters: [%{operand: "email", operator: "=", value: person.email}]
-      }
-      |> Poison.encode!
-      |> ApiParser.parse(Dummy.Person)
+      Dummy.Person
+      |> QueryEngine.build
+      |> QueryEngine.filter("email", :=, person.email)
       |> Runner.run
       |> Dummy.Repo.one
       |> elem(0)
@@ -40,11 +37,9 @@ defmodule Integration.Query.Test do
     person = insert(:person, organization: insert(:organization, name: "Test"))
 
     result =
-      %{
-        filters: [%{operand: "organization.name", operator: "=", value: "Test"}]
-      }
-      |> Poison.encode!
-      |> ApiParser.parse(Dummy.Person)
+      Dummy.Person
+      |> QueryEngine.build
+      |> QueryEngine.filter("organization.name", :=, "Test")
       |> Runner.run
       |> Dummy.Repo.one
       |> elem(0)
@@ -59,13 +54,12 @@ defmodule Integration.Query.Test do
     insert(:person)
 
     result =
-      %{
-        filters: [%{operand: "organization.name", operator: "=", value: organization.name}],
-        order: [%{column: "email", direction: :desc}, %{column: "organization.name", direction: :asc}],
-        includes: ["organization"]
-      }
-      |> Poison.encode!
-      |> ApiParser.parse(Dummy.Person)
+      Dummy.Person
+      |> QueryEngine.build
+      |> QueryEngine.filter("organization.name", :=, organization.name)
+      |> QueryEngine.order_by("email", :desc)
+      |> QueryEngine.order_by("organization.name", :asc)
+      |> QueryEngine.side_load("organization")
       |> Runner.run
       |> Dummy.Repo.all
       |> Enum.map(&elem(&1, 0))

@@ -11,14 +11,20 @@ defmodule QueryEngine.Engine.Runner do
   alias QueryEngine.Query.Order
 
   def run(%Request{sorts: nil} = request), do: run(%{request | sorts: []})
-  def run(%Request{sorts: []} = request), do: run(%{request | sorts: [%Order{field: %Field{column: :id}, direction: :asc}]})
-  def run(%Request{schema: schema, filters: filters, associations: associations, sorts: sorts, side_loads: side_loads, limit: limit, offset: offset}) do
-    schema
-    |> join(associations)
-    |> filter(filters)
-    |> sort(sorts)
-    |> side_load(side_loads)
-    |> Pager.page(limit, offset)
+  def run(%Request{sorts: []} = request), do: run(%{request | sorts: [%Order{field: "id", direction: :asc}]})
+  def run(%Request{associations: nil} = request) do
+    request
+    |> Request.set_associations
+    |> do_run
+  end
+
+  defp do_run(%Request{} = request) do
+    request.schema
+    |> join(request.associations)
+    |> filter(request.filters)
+    |> sort(request.sorts)
+    |> side_load(request.side_loads)
+    |> Pager.page(request.limit, request.offset)
   end
 
   defp join(query, [head | tail]) do

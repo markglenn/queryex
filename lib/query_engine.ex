@@ -21,11 +21,6 @@ defmodule QueryEngine do
     %Request{schema: schema}
   end
 
-  def side_load(%Request{side_loads: nil} = request, side_load), do: side_load(%Request{request | side_loads: []}, side_load)
-  def side_load(%Request{side_loads: side_loads} = request, side_load) do
-    %{request | side_loads: [side_load | side_loads]}
-  end
-
   def filter(%Request{filters: nil} = request, field, operator, value) do
     %{request | filters: []}
     |> filter(field, operator, value)
@@ -35,12 +30,16 @@ defmodule QueryEngine do
     %{request | filters: [%Filter{field: field, operator: operator, value: value} | filters]}
   end
 
+  def side_load(%Request{side_loads: nil} = request, side_load), do: side_load(%Request{request | side_loads: []}, side_load)
+  def side_load(%Request{side_loads: side_loads} = request, side_load) do
+    %{request | side_loads: [side_load | side_loads]}
+  end
+
   def order_by(%Request{sorts: nil} = request, field, direction), do: order_by(%{request | sorts: []}, field, direction)
   def order_by(%Request{sorts: sorts} = request, field, direction) do
     %{request | sorts: [%Order{field: field, direction: direction} | sorts]}
   end
 
   def page(%Request{} = request, limit, offset), do: %{request | limit: limit, offset: offset}
-
   def build(%Request{} = request), do: Builder.build(request)
 end

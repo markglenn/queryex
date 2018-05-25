@@ -1,10 +1,6 @@
 version: '2'
 services:
   db:
-    image: microsoft/mssql-server-linux
+    image: postgres
     ports:
-      - "1433:1433"
-      - "1434:1434/udp"
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=yourStrong(!)Password
+      - "5432:5432"

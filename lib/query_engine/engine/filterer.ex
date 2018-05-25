@@ -50,7 +50,7 @@ defmodule QueryEngine.Engine.Filterer do
     query
     |> where([m: Field.binding(query_field)], like(field(m, ^query_field.column), ^value))
   end
-  
+
   def filter(query, %Filter{field: query_field, operator: :not_like, value: value}) do
     query
     |> where([m: Field.binding(query_field)], not like(field(m, ^query_field.column), ^value))

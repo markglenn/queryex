@@ -84,7 +84,7 @@ defmodule QueryEngine.Engine.Builder.Test do
       order = %Order{field: "email", direction: :asc}
 
       response =
-        %Request{schema: Dummy.Person, sorts: [order, order]}
+        %Request{schema: Dummy.Person, sorts: [order]}
         |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&(elem(&1, 0).email))
@@ -94,7 +94,7 @@ defmodule QueryEngine.Engine.Builder.Test do
       # Test in reverse
       order = %Order{field: "email", direction: :desc}
       response =
-        %Request{schema: Dummy.Person, sorts: [order, order]}
+        %Request{schema: Dummy.Person, sorts: [order]}
         |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&elem(&1, 0))

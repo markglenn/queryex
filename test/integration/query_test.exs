@@ -1,5 +1,5 @@
 defmodule Integration.Query.Test do
-  use QueryEngine.ModelCase, async: true
+  use QueryEngine.ModelCase
 
   import QueryEngine.Factory
 

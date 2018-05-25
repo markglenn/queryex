@@ -8,14 +8,14 @@ defmodule QueryEngineTest do
 
   describe "build" do
     test "set the schema" do
-      assert %Request{schema: Dummy.User} == QueryEngine.from_schema(Dummy.User)
+      assert %Request{schema: Dummy.Person} == QueryEngine.from_schema(Dummy.Person)
     end
   end
 
   describe "filter" do
     test "set a single filter" do
       request =
-        Dummy.User
+        Dummy.Person
         |> QueryEngine.from_schema
         |> QueryEngine.filter("table.column", :=, "test")
 
@@ -24,7 +24,7 @@ defmodule QueryEngineTest do
 
     test "set multiple filters" do
       filters =
-        Dummy.User
+        Dummy.Person
         |> QueryEngine.from_schema
         |> QueryEngine.filter("table.column", :=, "test")
         |> QueryEngine.filter("column", :like, "test%")
@@ -40,7 +40,7 @@ defmodule QueryEngineTest do
   describe "order_by" do
     test "set sort" do
       sorts =
-        Dummy.User
+        Dummy.Person
         |> QueryEngine.from_schema
         |> QueryEngine.order_by("table.column", :asc)
         |> Map.get(:sorts)
@@ -50,7 +50,7 @@ defmodule QueryEngineTest do
 
     test "set multiple sorts" do
       sorts =
-        Dummy.User
+        Dummy.Person
         |> QueryEngine.from_schema
         |> QueryEngine.order_by("table.column", :asc)
         |> QueryEngine.order_by("column", :desc)
@@ -63,7 +63,7 @@ defmodule QueryEngineTest do
   describe "side_load" do
     test "set side load" do
       side_loads =
-        Dummy.User
+        Dummy.Person
         |> QueryEngine.from_schema
         |> QueryEngine.side_load("table")
         |> Map.get(:side_loads)
@@ -73,7 +73,7 @@ defmodule QueryEngineTest do
 
     test "set multiple sorts" do
       side_loads =
-        Dummy.User
+        Dummy.Person
         |> QueryEngine.from_schema
         |> QueryEngine.side_load("table1")
         |> QueryEngine.side_load("table2")
@@ -86,7 +86,7 @@ defmodule QueryEngineTest do
   describe "page" do
     test "set limit and offset" do
       request =
-        Dummy.User
+        Dummy.Person
         |> QueryEngine.from_schema
         |> QueryEngine.page(10, 20)
 
@@ -95,7 +95,7 @@ defmodule QueryEngineTest do
 
     test "set multiple sorts" do
       side_loads =
-        Dummy.User
+        Dummy.Person
         |> QueryEngine.from_schema
         |> QueryEngine.side_load("table1")
         |> QueryEngine.side_load("table2")

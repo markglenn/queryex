@@ -16,7 +16,14 @@ defmodule QueryEngine.Interface.Results do
     |> Association.from_side_loads
     |> Enum.map(&side_load(results, &1))
     |> List.flatten
-    |> Enum.uniq_by(&({&1.__struct__, &1.id}))
+    |> Enum.uniq_by(fn result ->
+      primary_key_values =
+        result.__struct__.__schema__(:primary_key)
+        |> Enum.map(&Map.get(result, &1))
+        |> List.to_tuple
+      
+      {result.__struct__, primary_key_values}
+    end)
   end
 
   defp side_load(results, {column, associations}) do

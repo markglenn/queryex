@@ -1,5 +1,7 @@
 defmodule QueryEngine.Query.AssociationTest do
   use ExUnit.Case, async: true
+  doctest QueryEngine.Query.Association
+  
   alias QueryEngine.Query.Association
 
   describe "from_path" do
@@ -101,6 +103,11 @@ defmodule QueryEngine.Query.AssociationTest do
 
     test "non overlapping side loads" do
       assert Association.from_side_loads(["organization.country", "person"]) == [{:organization, :country}, :person]
+    end
+
+    test "long side loads" do
+      assert Association.from_side_loads(["table1.table2.table3.table4.table5", "table1.table6"]) == 
+        [{:table1, [{:table2, [table3: [table4: :table5]]}, :table6]}]
     end
   end
 end

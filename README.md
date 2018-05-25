@@ -1,26 +1,18 @@
 # QueryEngine
 
-**TODO: Add description**
+A SQL query engine framework for building APIs in Elixir.  Allows generating an
+Ecto query using dynamic query parameters.
 
-## Installation
+## Example
 
-Install [Postgres.app](http://postgresapp.com/)
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
-  1. Add `query_engine` to your list of dependencies in `mix.exs`:
-
-    ```elixir
-    def deps do
-      [{:query_engine, "~> 0.1.0"}]
-    end
-    ```
-
-  2. Ensure `query_engine` is started before your application:
-
-    ```elixir
-    def application do
-      [applications: [:query_engine]]
-    end
-    ```
-
+```
+MyModels.User
+  |> QueryEngine.from_schema
+  |> QueryEngine.side_load("organization.country")
+  |> QueryEngine.filter("name", :like, "John D%")
+  |> QueryEngine.filter("organization.name", :=, "Test Organization")
+  |> QueryEngine.order_by("inserted_at", :desc)
+  |> QueryEngine.page(10, 20)
+  |> QueryEngine.build
+  |> MyApp.Repo.all
+```

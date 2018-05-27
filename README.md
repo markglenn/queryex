@@ -38,6 +38,21 @@ This framework does not handle security.  You may include a base query to
 filter off of instead of the raw schema.  This allows you to include a basic
 filter to filter out results before going through the framework.
 
+## Dot syntax
+
+While looking at the example, you may have noticed that we string relations
+together with periods.  We call this the dot syntax.  When you string multiple
+relations together like this, `QueryEx` will automatically join or preload those
+tables.
+
+`QueryEx.filter("organization.name", :=, "Test Organization")` for example will
+join the organizations table in the query and apply the filter of
+`WHERE organizations.name = 'Test Organization'`.
+
+You can string as many relations together as you need.
+
+`QueryEx.filter("organization.country.iso_code", :=, "US")`
+
 ## Contributing
 
 ### Requirements

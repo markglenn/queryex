@@ -27,11 +27,20 @@ defmodule QueryEx do
   ## Examples
 
       iex> QueryEx.from_schema(Dummy.Person)
-      %QueryEx.Interface.Request{schema: Dummy.Person}
+      %QueryEx.Interface.Request{base_query: Dummy.Person}
 
   """
   def from_schema(schema) do
-    %Request{schema: schema}
+    %Request{base_query: schema}
+  end
+
+  @doc """
+  Creates a QueryEx.Interface.Request with the given base query
+
+  Returns: A request with the base query set
+  """
+  def from_base_query(query) do
+    %Request{base_query: query}
   end
 
   @doc """
@@ -51,7 +60,7 @@ defmodule QueryEx do
         ],
         limit: nil,
         offset: nil,
-        schema: Dummy.Person,
+        base_query: Dummy.Person,
         side_loads: nil,
         sorts: nil
       }
@@ -80,7 +89,7 @@ defmodule QueryEx do
         filters: nil,
         limit: nil,
         offset: nil,
-        schema: Dummy.Person,
+        base_query: Dummy.Person,
         side_loads: ["company.employees"],
         sorts: nil
       }
@@ -105,7 +114,7 @@ defmodule QueryEx do
         filters: nil,
         limit: nil,
         offset: nil,
-        schema: Dummy.Person,
+        base_query: Dummy.Person,
         side_loads: nil,
         sorts: [%QueryEx.Query.Order{direction: :desc, field: "inserted_at"}]
       }
@@ -130,7 +139,7 @@ defmodule QueryEx do
         filters: nil,
         limit: 100,
         offset: 10,
-        schema: Dummy.Person,
+        base_query: Dummy.Person,
         side_loads: nil,
         sorts: nil
       }

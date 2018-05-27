@@ -8,7 +8,10 @@ defmodule QueryEx.Mixfile do
      deps: deps(),
      elixirc_paths: elixirc_paths(Mix.env),
      package: package(),
-     aliases: aliases()]
+     aliases: aliases(),
+     name: "QueryEx",
+     source_url: "https://github.com/markglenn/queryex"
+    ]
   end
 
   # Configuration for the OTP application
@@ -32,6 +35,7 @@ defmodule QueryEx.Mixfile do
      {:postgrex, ">= 0.0.0", only: [:test]},
      {:ex_machina, "~> 2.2", only: [:test]},
      {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
+     {:ex_doc, "~> 0.16", only: :dev, runtime: false}
     ]
   end
 

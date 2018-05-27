@@ -1,14 +1,14 @@
-defmodule QueryEngineTest do
+defmodule QueryExTest do
   use ExUnit.Case, async: true
-  doctest QueryEngine
+  doctest QueryEx
 
-  alias QueryEngine.Interface.Request
-  alias QueryEngine.Query.Filter
-  alias QueryEngine.Query.Order
+  alias QueryEx.Interface.Request
+  alias QueryEx.Query.Filter
+  alias QueryEx.Query.Order
 
   describe "build" do
     test "set the schema" do
-      assert %Request{schema: Dummy.Person} == QueryEngine.from_schema(Dummy.Person)
+      assert %Request{schema: Dummy.Person} == QueryEx.from_schema(Dummy.Person)
     end
   end
 
@@ -16,8 +16,8 @@ defmodule QueryEngineTest do
     test "set a single filter" do
       request =
         Dummy.Person
-        |> QueryEngine.from_schema
-        |> QueryEngine.filter("table.column", :=, "test")
+        |> QueryEx.from_schema
+        |> QueryEx.filter("table.column", :=, "test")
 
       assert %Request{filters: [%Filter{field: "table.column", operator: :=, value: "test"}]} = request
     end
@@ -25,9 +25,9 @@ defmodule QueryEngineTest do
     test "set multiple filters" do
       filters =
         Dummy.Person
-        |> QueryEngine.from_schema
-        |> QueryEngine.filter("table.column", :=, "test")
-        |> QueryEngine.filter("column", :like, "test%")
+        |> QueryEx.from_schema
+        |> QueryEx.filter("table.column", :=, "test")
+        |> QueryEx.filter("column", :like, "test%")
         |> Map.get(:filters)
 
       assert [
@@ -41,8 +41,8 @@ defmodule QueryEngineTest do
     test "set sort" do
       sorts =
         Dummy.Person
-        |> QueryEngine.from_schema
-        |> QueryEngine.order_by("table.column", :asc)
+        |> QueryEx.from_schema
+        |> QueryEx.order_by("table.column", :asc)
         |> Map.get(:sorts)
 
       assert [%Order{field: "table.column", direction: :asc}] = sorts
@@ -51,9 +51,9 @@ defmodule QueryEngineTest do
     test "set multiple sorts" do
       sorts =
         Dummy.Person
-        |> QueryEngine.from_schema
-        |> QueryEngine.order_by("table.column", :asc)
-        |> QueryEngine.order_by("column", :desc)
+        |> QueryEx.from_schema
+        |> QueryEx.order_by("table.column", :asc)
+        |> QueryEx.order_by("column", :desc)
         |> Map.get(:sorts)
 
       assert [%Order{field: "column", direction: :desc}, %Order{field: "table.column", direction: :asc}] == sorts
@@ -64,8 +64,8 @@ defmodule QueryEngineTest do
     test "set side load" do
       side_loads =
         Dummy.Person
-        |> QueryEngine.from_schema
-        |> QueryEngine.side_load("table")
+        |> QueryEx.from_schema
+        |> QueryEx.side_load("table")
         |> Map.get(:side_loads)
 
       assert ["table"] == side_loads
@@ -74,9 +74,9 @@ defmodule QueryEngineTest do
     test "set multiple sorts" do
       side_loads =
         Dummy.Person
-        |> QueryEngine.from_schema
-        |> QueryEngine.side_load("table1")
-        |> QueryEngine.side_load("table2")
+        |> QueryEx.from_schema
+        |> QueryEx.side_load("table1")
+        |> QueryEx.side_load("table2")
         |> Map.get(:side_loads)
 
       assert ["table2", "table1"] == side_loads
@@ -87,8 +87,8 @@ defmodule QueryEngineTest do
     test "set limit and offset" do
       request =
         Dummy.Person
-        |> QueryEngine.from_schema
-        |> QueryEngine.page(10, 20)
+        |> QueryEx.from_schema
+        |> QueryEx.page(10, 20)
 
       assert %Request{limit: 10, offset: 20} = request
     end
@@ -96,9 +96,9 @@ defmodule QueryEngineTest do
     test "set multiple sorts" do
       side_loads =
         Dummy.Person
-        |> QueryEngine.from_schema
-        |> QueryEngine.side_load("table1")
-        |> QueryEngine.side_load("table2")
+        |> QueryEx.from_schema
+        |> QueryEx.side_load("table1")
+        |> QueryEx.side_load("table2")
         |> Map.get(:side_loads)
 
       assert ["table2", "table1"] == side_loads

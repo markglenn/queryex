@@ -1,8 +1,8 @@
-defmodule QueryEngine.Mixfile do
+defmodule QueryEx.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :query_engine,
+    [app: :queryex,
      version: "0.1.0",
      elixir: "~> 1.6",
      deps: deps(),
@@ -38,7 +38,7 @@ defmodule QueryEngine.Mixfile do
   defp package do
     [contributors: ["Mark Glenn"],
      licenses: ["MIT"],
-     links: %{"GitHub" => "https://github.com/markglenn/query_engine"}]
+     links: %{"GitHub" => "https://github.com/markglenn/queryex"}]
   end
 
   defp aliases do

@@ -1,15 +1,15 @@
 use Mix.Config
 
-config :query_engine,
+config :queryex,
   ecto_repos: [Dummy.Repo]
 
 config :logger, level: :warn
 
 # Configure your database
-config :query_engine, Dummy.Repo,
+config :queryex, Dummy.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   password: "postgres",
-  database: "query_engine_test",
+  database: "query_ex_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

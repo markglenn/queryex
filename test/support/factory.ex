@@ -1,4 +1,4 @@
-defmodule QueryEngine.Factory do
+defmodule QueryEx.Factory do
   @moduledoc """
   This module defines factories for use in tests
   """

@@ -1,6 +1,6 @@
 defmodule Dummy.PersonTest do
-  use QueryEngine.ModelCase, async: true
-  import QueryEngine.Factory
+  use QueryEx.ModelCase, async: true
+  import QueryEx.Factory
 
   alias Dummy.Person
 

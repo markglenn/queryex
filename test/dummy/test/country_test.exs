@@ -1,6 +1,6 @@
 defmodule Dummy.CountryTest do
-  use QueryEngine.ModelCase, async: true
-  import QueryEngine.Factory
+  use QueryEx.ModelCase, async: true
+  import QueryEx.Factory
 
   alias Dummy.Country
 

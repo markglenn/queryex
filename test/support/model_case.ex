@@ -1,4 +1,4 @@
-defmodule QueryEngine.ModelCase do
+defmodule QueryEx.ModelCase do
   @moduledoc """
   This module defines the test case to be used by
   model tests.
@@ -21,7 +21,7 @@ defmodule QueryEngine.ModelCase do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import QueryEngine.ModelCase
+      import QueryEx.ModelCase
     end
   end
 

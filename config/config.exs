@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure for your application as:
 #
-#     config :query_engine, key: :value
+#     config :queryex, key: :value
 #
 # And access this configuration in your application as:
 #
-#     Application.get_env(:query_engine, :key)
+#     Application.get_env(:queryex, :key)
 #
 # Or configure a 3rd-party app:
 #

@@ -1,14 +1,14 @@
 defmodule Integration.Query.Test do
-  use QueryEngine.ModelCase
+  use QueryEx.ModelCase
 
-  import QueryEngine.Factory
+  import QueryEx.Factory
 
   test "simple request" do
     person = insert(:person)
     result =
       Dummy.Person
-      |> QueryEngine.from_schema
-      |> QueryEngine.build
+      |> QueryEx.from_schema
+      |> QueryEx.build
       |> Dummy.Repo.one
       |> elem(0)
 
@@ -21,9 +21,9 @@ defmodule Integration.Query.Test do
 
     result =
       Dummy.Person
-      |> QueryEngine.from_schema
-      |> QueryEngine.filter("email", :=, person.email)
-      |> QueryEngine.build
+      |> QueryEx.from_schema
+      |> QueryEx.filter("email", :=, person.email)
+      |> QueryEx.build
       |> Dummy.Repo.one
       |> elem(0)
 
@@ -36,9 +36,9 @@ defmodule Integration.Query.Test do
 
     result =
       Dummy.Person
-      |> QueryEngine.from_schema
-      |> QueryEngine.filter("organization.name", :=, "Test")
-      |> QueryEngine.build
+      |> QueryEx.from_schema
+      |> QueryEx.filter("organization.name", :=, "Test")
+      |> QueryEx.build
       |> Dummy.Repo.one
       |> elem(0)
 
@@ -53,12 +53,12 @@ defmodule Integration.Query.Test do
 
     result =
       Dummy.Person
-      |> QueryEngine.from_schema
-      |> QueryEngine.filter("organization.name", :=, organization.name)
-      |> QueryEngine.order_by("email", :desc)
-      |> QueryEngine.order_by("organization.name", :asc)
-      |> QueryEngine.side_load("organization")
-      |> QueryEngine.build
+      |> QueryEx.from_schema
+      |> QueryEx.filter("organization.name", :=, organization.name)
+      |> QueryEx.order_by("email", :desc)
+      |> QueryEx.order_by("organization.name", :asc)
+      |> QueryEx.side_load("organization")
+      |> QueryEx.build
       |> Dummy.Repo.all
       |> Enum.map(&elem(&1, 0))
 

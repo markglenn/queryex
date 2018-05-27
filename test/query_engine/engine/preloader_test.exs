@@ -1,5 +1,6 @@
 defmodule QueryEngine.Engine.Preloader.Test do
   use QueryEngine.ModelCase, async: true
+  doctest QueryEngine.Engine.Preloader
 
   import QueryEngine.Factory
   alias QueryEngine.Engine.Preloader

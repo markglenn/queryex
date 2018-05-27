@@ -1,7 +1,8 @@
 defmodule QueryEngine.Engine.FiltererTest do
   use QueryEngine.ModelCase, async: true
-  require QueryEngine.Engine.Filterer
+  doctest QueryEngine.Engine.Filterer
 
+  require QueryEngine.Engine.Filterer
   alias QueryEngine.Engine.Joiner
   alias QueryEngine.Engine.Filterer
 

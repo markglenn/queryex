@@ -1,5 +1,6 @@
 defmodule QueryEngine.Engine.Pager.Test do
   use QueryEngine.ModelCase, async: true
+  doctest QueryEngine.Engine.Pager
 
   import QueryEngine.Factory
 

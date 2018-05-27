@@ -1,4 +1,12 @@
 defmodule QueryEngine.Interface.Request do
+  @moduledoc """
+
+  Defines a request to the query engine.
+  
+  See also `QueryEngine`
+
+  """
+
   defstruct [:schema, :filters, :associations, :sorts, :side_loads, :limit, :offset]
 
   alias QueryEngine.Interface.Request

@@ -1,4 +1,13 @@
 defmodule QueryEngine.Interface.Results do
+  @moduledoc """
+
+  Returned results for API engines
+
+  Data is stored similar to `JSON API` with the side loaded data being
+  flattened in the included field
+
+  """
+
   defstruct [:data, :included]
 
   alias QueryEngine.Query.Association

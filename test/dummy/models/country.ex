@@ -1,4 +1,8 @@
 defmodule Dummy.Country do
+  @moduledoc """
+  Test model
+  """
+
   use Ecto.Schema
 
   import Ecto.Changeset

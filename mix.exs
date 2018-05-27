@@ -31,7 +31,7 @@ defmodule QueryEngine.Mixfile do
     [{:ecto, "~> 2.2"},
      {:postgrex, ">= 0.0.0", only: [:test]},
      {:ex_machina, "~> 2.2", only: [:test]},
-     {:credo, "~> 0.9.1", only: [:test], runtime: false},
+     {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
     ]
   end
 

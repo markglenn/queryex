@@ -25,10 +25,9 @@ defmodule QueryEngine.Engine.Builder do
 
   ## Example
 
+  iex> request = %QueryEngine.Interface.Request{schema: Dummy.Person, limit: 100, offset: 0}
   iex> QueryEngine.Engine.Builder.build(request)
-  #Ecto.Query<from p in Dummy.Person, where: like(p.name, ^"John %"),
-   order_by: [asc: p.id], limit: ^100, offset: ^0,
-   select: {p, fragment("count(1) OVER() AS __count__")}>
+  #Ecto.Query<from p in Dummy.Person, order_by: [asc: p.id], limit: ^100, offset: ^0, select: {p, fragment("count(1) OVER() AS __count__")}>
 
   """
   def build(%Request{sorts: nil} = request), do: build(%{request | sorts: []})

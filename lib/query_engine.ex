@@ -26,8 +26,8 @@ defmodule QueryEngine do
 
   ## Examples
 
-      iex> QueryEngine.from_schema(MyModel)
-      %QueryEngine.Interface.Request{schema: MyModel}
+      iex> QueryEngine.from_schema(Dummy.Person)
+      %QueryEngine.Interface.Request{schema: Dummy.Person}
 
   """
   def from_schema(schema) do

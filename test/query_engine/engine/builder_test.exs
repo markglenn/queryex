@@ -1,5 +1,6 @@
 defmodule QueryEngine.Engine.Builder.Test do
   use QueryEngine.ModelCase, async: true
+  doctest QueryEngine.Engine.Builder
 
   alias QueryEngine.Engine.Builder
   alias QueryEngine.Interface.Request

@@ -1,4 +1,8 @@
 defmodule QueryEngine.Factory do
+  @moduledoc """
+  This module defines factories for use in tests
+  """
+
   # with Ecto
   use ExMachina.Ecto, repo: Dummy.Repo
 

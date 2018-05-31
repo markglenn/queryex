@@ -120,6 +120,7 @@ defmodule QueryEx.Query.Association do
     |> set_parent_bindings
   end
 
+  # Gives each association a link to its parent table's binding
   defp set_parent_bindings(associations) do
     Enum.map(associations, fn(association) ->
       {_, parent_path} = Path.parse(association.path)

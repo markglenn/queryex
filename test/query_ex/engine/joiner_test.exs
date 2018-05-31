@@ -18,7 +18,7 @@ defmodule QueryEx.Engine.JoinerTest do
 
       query_person =
         Dummy.Person
-        |> Joiner.join(Enum.at(associations, 0))
+        |> Joiner.join(List.first(associations))
         |> where([_, o], o.name == ^organization.name)
         |> Dummy.Repo.one
 

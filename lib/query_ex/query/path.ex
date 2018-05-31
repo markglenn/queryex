@@ -4,7 +4,10 @@ defmodule QueryEx.Query.Path do
   """
 
   @doc """
-  Parse a path into a field and its association path
+  Parse a full path into a field and its association path
+
+      iex> QueryEx.Query.Path.parse("organization.name")
+      {"name", "organization"}
   """
   def parse(path) do
     path

@@ -1,5 +1,6 @@
 defmodule QueryEx.Query.FieldTest do
   use ExUnit.Case, async: true
+  doctest QueryEx.Query.Field
   alias QueryEx.Query.Field
   alias QueryEx.Query.Association
 

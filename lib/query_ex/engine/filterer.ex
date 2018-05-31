@@ -13,9 +13,9 @@ defmodule QueryEx.Engine.Filterer do
   ### Example
 
       iex> filter = %QueryEx.Query.Filter{
-      ...> field: QueryEx.Query.Field.from_path("first_name"),
-      ...> operator: :=,
-      ...> value: "John"
+      ...>   field: QueryEx.Query.Field.from_path("first_name"),
+      ...>   operator: :=,
+      ...>   value: "John"
       ...> }
       iex> QueryEx.Engine.Filterer.filter(Dummy.Person, filter)
       #Ecto.Query<from p in Dummy.Person, where: p.first_name == ^"John">

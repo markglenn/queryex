@@ -1,5 +1,6 @@
 defmodule QueryEx.Query.PathTest do
   use ExUnit.Case, async: true
+  doctest QueryEx.Query.Path
   alias QueryEx.Query.Path
 
   describe "parse" do

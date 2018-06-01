@@ -8,15 +8,43 @@ Ecto query using dynamic query parameters.
 
 ```
 MyModels.User
+|> QueryEx.from_schema
+|> QueryEx.side_load("organization.country")
+|> QueryEx.filter("name", :like, "John D%")
+|> QueryEx.filter("organization.name", :=, "Test Organization")
+|> QueryEx.order_by("inserted_at", :desc)
+|> QueryEx.page(10, 20)
+|> QueryEx.build
+|> MyApp.Repo.all
+```
+
+And, since `QueryEx` builds a standard ecto query, you may also inject your own custom sql into it.
+
+```
+defmodule MyModels.User do
+  ...
+
+  # Pull only active users
+  def active(query) do
+    from p in query,
+    where: p.active == true
+  end
+
+  ...
+end
+```
+
+```
+query =
+  MyModels.User
   |> QueryEx.from_schema
   |> QueryEx.side_load("organization.country")
   |> QueryEx.filter("name", :like, "John D%")
-  |> QueryEx.filter("organization.name", :=, "Test Organization")
-  |> QueryEx.order_by("inserted_at", :desc)
-  |> QueryEx.page(10, 20)
   |> QueryEx.build
+  |> MyModels.User.active # Pull only active users
   |> MyApp.Repo.all
 ```
+
 
 ## Why?
 
@@ -74,8 +102,8 @@ Starting db ... done
 $ mix test
 .......................................................................................
 
-Finished in 0.9 seconds
-9 doctests, 78 tests, 0 failures
+Finished in 0.8 seconds
+21 doctests, 78 tests, 0 failures
 ```
 
 ### Stopping Docker

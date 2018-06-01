@@ -7,7 +7,7 @@ defmodule QueryEx.Interface.Request do
 
   """
 
-  defstruct [:base_query, :filters, :associations, :sorts, :side_loads, :limit, :offset]
+  defstruct [:schema, :filters, :associations, :sorts, :side_loads, :limit, :offset]
 
   alias QueryEx.Interface.Request
   alias QueryEx.Query.Association

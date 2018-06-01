@@ -8,7 +8,7 @@ defmodule QueryExTest do
 
   describe "build" do
     test "set the schema" do
-      assert %Request{base_query: Dummy.Person} == QueryEx.from_schema(Dummy.Person)
+      assert %Request{schema: Dummy.Person} == QueryEx.from_schema(Dummy.Person)
     end
   end
 

@@ -15,7 +15,7 @@ defmodule QueryEx.Engine.Builder.Test do
       person = insert(:person)
 
       response =
-        %Request{base_query: Dummy.Person}
+        %Request{schema: Dummy.Person}
         |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&elem(&1, 0))
@@ -28,7 +28,7 @@ defmodule QueryEx.Engine.Builder.Test do
       person = insert(:person)
 
       response =
-        %Request{base_query: Dummy.Person, side_loads: ["organization.country"]}
+        %Request{schema: Dummy.Person, side_loads: ["organization.country"]}
         |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&elem(&1, 0))
@@ -53,7 +53,7 @@ defmodule QueryEx.Engine.Builder.Test do
       insert(:person, email: "b")
 
       response =
-        %Request{base_query: Dummy.Person, filters: [filter]}
+        %Request{schema: Dummy.Person, filters: [filter]}
         |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&elem(&1, 0))
@@ -69,7 +69,7 @@ defmodule QueryEx.Engine.Builder.Test do
       filter = %Filter{field: "organization.name", operator: :=, value: person.organization.name}
 
       response =
-        %Request{base_query: Dummy.Person, filters: [filter]}
+        %Request{schema: Dummy.Person, filters: [filter]}
         |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&elem(&1, 0))
@@ -85,7 +85,7 @@ defmodule QueryEx.Engine.Builder.Test do
       order = %Order{field: "email", direction: :asc}
 
       response =
-        %Request{base_query: Dummy.Person, sorts: [order]}
+        %Request{schema: Dummy.Person, sorts: [order]}
         |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&(elem(&1, 0).email))
@@ -95,7 +95,7 @@ defmodule QueryEx.Engine.Builder.Test do
       # Test in reverse
       order = %Order{field: "email", direction: :desc}
       response =
-        %Request{base_query: Dummy.Person, sorts: [order]}
+        %Request{schema: Dummy.Person, sorts: [order]}
         |> Builder.build
         |> Dummy.Repo.all
         |> Enum.map(&elem(&1, 0))

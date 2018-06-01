@@ -2,16 +2,17 @@ defmodule QueryEx do
   @moduledoc """
   A sql query engine framework
 
-  ```
-  MyModels.User
-    |> QueryEx.from_schema
-    |> QueryEx.side_load("organization.country")
-    |> QueryEx.filter("name", :like, "John D%")
-    |> QueryEx.filter("organization.name", :=, "Test Organization")
-    |> QueryEx.order_by("inserted_at", :desc)
-    |> QueryEx.page(10, 20)
-    |> QueryEx.build
-  ```
+  ## Example
+
+      iex> Dummy.Person
+      ...>   |> QueryEx.from_schema
+      ...>   |> QueryEx.side_load("organization.country")
+      ...>   |> QueryEx.filter("name", :like, "John D%")
+      ...>   |> QueryEx.filter("organization.name", :=, "Test Organization")
+      ...>   |> QueryEx.order_by("inserted_at", :desc)
+      ...>   |> QueryEx.page(10, 20)
+      ...>   |> QueryEx.build
+      #Ecto.Query<from p in Dummy.Person, join: o in assoc(p, :organization), where: o.name == ^"Test Organization", where: like(p.name, ^"John D%"), order_by: [desc: p.inserted_at], limit: ^10, offset: ^20, select: {p, fragment("count(1) OVER() AS __count__")}, preload: [[organization: :country]]>
   """
 
   alias QueryEx.Interface.Request
@@ -24,23 +25,14 @@ defmodule QueryEx do
 
   Returns: A request with the schema set
 
-  ## Examples
+  ## Example
 
       iex> QueryEx.from_schema(Dummy.Person)
-      %QueryEx.Interface.Request{base_query: Dummy.Person}
+      %QueryEx.Interface.Request{schema: Dummy.Person}
 
   """
   def from_schema(schema) do
-    %Request{base_query: schema}
-  end
-
-  @doc """
-  Creates a QueryEx.Interface.Request with the given base query
-
-  Returns: A request with the base query set
-  """
-  def from_base_query(query) do
-    %Request{base_query: query}
+    %Request{schema: schema}
   end
 
   @doc """
@@ -50,7 +42,7 @@ defmodule QueryEx do
 
   Returns: A request with the given filter added to the filter list
 
-  ## Examples
+  ## Example
 
       iex> QueryEx.from_schema(Dummy.Person) |> QueryEx.filter("name", :like, "John %")
       %QueryEx.Interface.Request{
@@ -60,7 +52,7 @@ defmodule QueryEx do
         ],
         limit: nil,
         offset: nil,
-        base_query: Dummy.Person,
+        schema: Dummy.Person,
         side_loads: nil,
         sorts: nil
       }
@@ -81,7 +73,7 @@ defmodule QueryEx do
 
   Returns: A request with the given table added to the side load list
 
-  ## Examples
+  ## Example
 
       iex> QueryEx.from_schema(Dummy.Person) |> QueryEx.side_load("company.employees")
       %QueryEx.Interface.Request{
@@ -89,7 +81,7 @@ defmodule QueryEx do
         filters: nil,
         limit: nil,
         offset: nil,
-        base_query: Dummy.Person,
+        schema: Dummy.Person,
         side_loads: ["company.employees"],
         sorts: nil
       }
@@ -106,7 +98,7 @@ defmodule QueryEx do
 
   Returns: A request with the given sort added to the sorts
 
-  ## Examples
+  ## Example
 
       iex> QueryEx.from_schema(Dummy.Person) |> QueryEx.order_by("inserted_at", :desc)
       %QueryEx.Interface.Request{
@@ -114,7 +106,7 @@ defmodule QueryEx do
         filters: nil,
         limit: nil,
         offset: nil,
-        base_query: Dummy.Person,
+        schema: Dummy.Person,
         side_loads: nil,
         sorts: [%QueryEx.Query.Order{direction: :desc, field: "inserted_at"}]
       }
@@ -131,7 +123,7 @@ defmodule QueryEx do
 
   Returns: A request with the pagination parameters set
 
-  ## Examples
+  ## Example
 
       iex> QueryEx.from_schema(Dummy.Person) |> QueryEx.page(100, 10)
       %QueryEx.Interface.Request{
@@ -139,7 +131,7 @@ defmodule QueryEx do
         filters: nil,
         limit: 100,
         offset: 10,
-        base_query: Dummy.Person,
+        schema: Dummy.Person,
         side_loads: nil,
         sorts: nil
       }
@@ -153,7 +145,7 @@ defmodule QueryEx do
 
   Returns: An `Ecto.Query` that handles all the information from the request
 
-  ## Examples
+  ## Example
 
       iex> QueryEx.from_schema(Dummy.Person) |> QueryEx.filter("name", :like, "John %") |> QueryEx.build
       #Ecto.Query<from p in Dummy.Person, where: like(p.name, ^"John %"), order_by: [asc: p.id], limit: ^100, offset: ^0, select: {p, fragment("count(1) OVER() AS __count__")}>

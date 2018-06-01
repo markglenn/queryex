@@ -25,16 +25,16 @@ defmodule QueryEx.Engine.Builder do
 
   ## Example
 
-  iex> request = %QueryEx.Interface.Request{base_query: Dummy.Person, limit: 100, offset: 0}
+  iex> request = %QueryEx.Interface.Request{schema: Dummy.Person, limit: 100, offset: 0}
   iex> QueryEx.Engine.Builder.build(request)
   #Ecto.Query<from p in Dummy.Person, order_by: [asc: p.id], limit: ^100, offset: ^0, select: {p, fragment("count(1) OVER() AS __count__")}>
 
   """
   def build(%Request{sorts: nil} = request), do: build(%{request | sorts: []})
-  def build(%Request{sorts: [], base_query: base_query} = request) do
+  def build(%Request{sorts: [], schema: schema} = request) do
     # Default to sorting by the primary key(s) ascending
     sorts =
-      base_query.__schema__(:primary_key)
+      schema.__schema__(:primary_key)
       |> Enum.map(&Atom.to_string/1)
       |> Enum.map(&(%Order{field: &1, direction: :asc}))
 
@@ -48,7 +48,7 @@ defmodule QueryEx.Engine.Builder do
   end
 
   defp do_build(%Request{} = request) do
-    request.base_query
+    request.schema
     |> join(request.associations)
     |> filter(request.filters)
     |> sort(request.sorts)

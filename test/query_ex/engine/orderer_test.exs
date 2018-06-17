@@ -26,12 +26,12 @@ defmodule QueryEx.Engine.OrdererTest do
       query =
         Dummy.Person
         |> Orderer.order(order)
-        |> Dummy.Repo.all
-        |> Enum.map(&(&1.email))
+        |> Dummy.Repo.all()
+        |> Enum.map(& &1.email)
 
       assert query == ["A", "B"]
     end
-    
+
     test "with descending order", %{email_field: field} do
       insert(:person, email: "A")
       insert(:person, email: "B")
@@ -40,8 +40,8 @@ defmodule QueryEx.Engine.OrdererTest do
       query =
         Dummy.Person
         |> Orderer.order(order)
-        |> Dummy.Repo.all
-        |> Enum.map(&(&1.email))
+        |> Dummy.Repo.all()
+        |> Enum.map(& &1.email)
 
       assert query == ["B", "A"]
     end
@@ -55,26 +55,24 @@ defmodule QueryEx.Engine.OrdererTest do
 
       associations =
         "organization"
-        |> Association.from_path
-        |> Association.assign_bindings
+        |> Association.from_path()
+        |> Association.assign_bindings(0)
 
       field =
         "organization.name"
-        |> Field.from_path
+        |> Field.from_path()
         |> Field.set_association(associations)
-      
+
       order = %Order{field: field, direction: :asc}
 
       query =
         Dummy.Person
         |> Joiner.join(Enum.at(associations, 0))
         |> Orderer.order(order)
-        |> Repo.all
-        |> Enum.map(&(&1.id))
+        |> Repo.all()
+        |> Enum.map(& &1.id)
 
       assert query == [person.id, person2.id]
     end
   end
 end
-
-

@@ -25,30 +25,33 @@ defmodule QueryEx.Engine.Builder do
 
   ## Example
 
-  iex> request = %QueryEx.Interface.Request{schema: Dummy.Person, limit: 100, offset: 0}
+  iex> request = %QueryEx.Interface.Request{query: Ecto.Queryable.to_query(Dummy.Person), limit: 100, offset: 0}
   iex> QueryEx.Engine.Builder.build(request)
   #Ecto.Query<from p in Dummy.Person, order_by: [asc: p.id], limit: ^100, offset: ^0, select: {p, fragment("count(1) OVER() AS __count__")}>
 
   """
   def build(%Request{sorts: nil} = request), do: build(%{request | sorts: []})
-  def build(%Request{sorts: [], schema: schema} = request) do
+
+  def build(%Request{sorts: [], query: query = %Ecto.Query{}} = request) do
+    schema = elem(query.from, 1)
+
     # Default to sorting by the primary key(s) ascending
     sorts =
       schema.__schema__(:primary_key)
       |> Enum.map(&Atom.to_string/1)
-      |> Enum.map(&(%Order{field: &1, direction: :asc}))
+      |> Enum.map(&%Order{field: &1, direction: :asc})
 
-    build %{request | sorts: sorts}
+    build(%{request | sorts: sorts})
   end
 
   def build(%Request{associations: nil} = request) do
     request
-    |> Request.set_associations
+    |> Request.set_associations()
     |> do_build
   end
 
   defp do_build(%Request{} = request) do
-    request.schema
+    request.query
     |> join(request.associations)
     |> filter(request.filters)
     |> sort(request.sorts)
@@ -61,6 +64,7 @@ defmodule QueryEx.Engine.Builder do
     |> Joiner.join(head)
     |> join(tail)
   end
+
   defp join(query, _), do: query
 
   defp filter(query, [head | tail]) do
@@ -68,6 +72,7 @@ defmodule QueryEx.Engine.Builder do
     |> Filterer.filter(head)
     |> filter(tail)
   end
+
   defp filter(query, _), do: query
 
   defp sort(query, [head | tail]) do
@@ -75,6 +80,7 @@ defmodule QueryEx.Engine.Builder do
     |> Orderer.order(head)
     |> sort(tail)
   end
+
   defp sort(query, _), do: query
 
   defp side_load(query, [head | tail]) do
@@ -82,5 +88,6 @@ defmodule QueryEx.Engine.Builder do
     |> Preloader.preload_path(head)
     |> side_load(tail)
   end
+
   defp side_load(query, _), do: query
 end

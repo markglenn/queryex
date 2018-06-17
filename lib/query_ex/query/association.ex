@@ -25,12 +25,13 @@ defmodule QueryEx.Query.Association do
   Returns: The name of the association only as an atom
 
   ## Example:
-  
+
       iex> %QueryEx.Query.Association{path: "company.employees"} |> QueryEx.Query.Association.name
       :employees
 
   """
   def name(%Association{path: ""}), do: nil
+
   def name(%Association{path: path}) do
     {name, _} = Path.parse(path)
 
@@ -64,7 +65,7 @@ defmodule QueryEx.Query.Association do
   def from_path(path) do
     path
     |> String.split(".")
-    |> Enum.reduce({[], []}, fn(path_piece, acc) ->
+    |> Enum.reduce({[], []}, fn path_piece, acc ->
       # acc is defined as {association_list, parent_path_list}
 
       # Current path list
@@ -73,14 +74,15 @@ defmodule QueryEx.Query.Association do
       # Generate the full path from the accumulator's path list
       full_path =
         paths
-        |> Enum.reverse
+        |> Enum.reverse()
         |> Enum.join(".")
 
       association = %Association{path: full_path}
       {[association | elem(acc, 0)], paths}
     end)
-    |> elem(0) # Only care about the association list, not the temporary path accumulator
-    |> Enum.reverse
+    # Only care about the association list, not the temporary path accumulator
+    |> elem(0)
+    |> Enum.reverse()
   end
 
   @doc """
@@ -98,9 +100,9 @@ defmodule QueryEx.Query.Association do
   """
   def from_side_loads(side_loads) do
     side_loads
-    |> Enum.reverse
+    |> Enum.reverse()
     |> Enum.map(&String.split(&1, "."))
-    |> Enum.reduce([], fn(x, acc) ->
+    |> Enum.reduce([], fn x, acc ->
       x
       |> to_side_load_list
       |> Keyword.merge(acc, &merge_keywords/3)
@@ -112,26 +114,29 @@ defmodule QueryEx.Query.Association do
   @doc """
   Assigns binding keys to associations based on their order
   """
-  def assign_bindings(associations) do
+  def assign_bindings(associations, initial_binding) do
     associations
-    |> Enum.uniq_by(fn(a) -> a.path end)
+    |> Enum.uniq_by(fn a -> a.path end)
     |> Enum.with_index()
-    |> Enum.map(fn({association, index}) -> %Association{association | binding: index + 1} end)
+    |> Enum.map(fn {association, index} ->
+      %Association{association | binding: index + 1 + initial_binding}
+    end)
     |> set_parent_bindings
   end
 
   # Gives each association a link to its parent table's binding
   defp set_parent_bindings(associations) do
-    Enum.map(associations, fn(association) ->
+    Enum.map(associations, fn association ->
       {_, parent_path} = Path.parse(association.path)
 
       parent_association =
         associations
-        |> Enum.find(fn(a) -> a.path == parent_path end)
+        |> Enum.find(fn a -> a.path == parent_path end)
 
       case parent_association do
         nil ->
           %Association{association | parent_binding: 0}
+
         _ ->
           %Association{association | parent_binding: parent_association.binding}
       end
@@ -146,7 +151,9 @@ defmodule QueryEx.Query.Association do
   # Remove any [table: nil] recursively and replace with :table
   defp clean_side_load([{left, nil}]), do: left
   defp clean_side_load([{left, right}]), do: [{left, clean_side_load(right)}]
-  defp clean_side_load([{left, right} | tail]), do: [{left, clean_side_load(right)}, clean_side_load(tail)]
+
+  defp clean_side_load([{left, right} | tail]),
+    do: [{left, clean_side_load(right)}, clean_side_load(tail)]
 
   # Wrap the results in a list if only a single atom
   defp wrap(a) when is_atom(a), do: [a]

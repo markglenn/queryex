@@ -2,6 +2,7 @@ defmodule QueryEx.Engine.Builder.Test do
   use QueryEx.ModelCase, async: true
   doctest QueryEx.Engine.Builder
 
+  import Ecto.Queryable
   alias QueryEx.Engine.Builder
   alias QueryEx.Interface.Request
 
@@ -15,9 +16,9 @@ defmodule QueryEx.Engine.Builder.Test do
       person = insert(:person)
 
       response =
-        %Request{schema: Dummy.Person}
-        |> Builder.build
-        |> Dummy.Repo.all
+        %Request{query: to_query(Dummy.Person)}
+        |> Builder.build()
+        |> Dummy.Repo.all()
         |> Enum.map(&elem(&1, 0))
 
       id = person.id
@@ -28,22 +29,24 @@ defmodule QueryEx.Engine.Builder.Test do
       person = insert(:person)
 
       response =
-        %Request{schema: Dummy.Person, side_loads: ["organization.country"]}
-        |> Builder.build
-        |> Dummy.Repo.all
+        %Request{query: to_query(Dummy.Person), side_loads: ["organization.country"]}
+        |> Builder.build()
+        |> Dummy.Repo.all()
         |> Enum.map(&elem(&1, 0))
 
       person_id = person.id
       organization_id = person.organization_id
       country_id = person.organization.country_id
 
-      assert [%Dummy.Person{
-        id: ^person_id,
-        organization: %Dummy.Organization{
-          id: ^organization_id,
-          country: %Dummy.Country{id: ^country_id}
-        }
-      }] = response
+      assert [
+               %Dummy.Person{
+                 id: ^person_id,
+                 organization: %Dummy.Organization{
+                   id: ^organization_id,
+                   country: %Dummy.Country{id: ^country_id}
+                 }
+               }
+             ] = response
     end
 
     test "filter request" do
@@ -53,9 +56,9 @@ defmodule QueryEx.Engine.Builder.Test do
       insert(:person, email: "b")
 
       response =
-        %Request{schema: Dummy.Person, filters: [filter]}
-        |> Builder.build
-        |> Dummy.Repo.all
+        %Request{query: to_query(Dummy.Person), filters: [filter]}
+        |> Builder.build()
+        |> Dummy.Repo.all()
         |> Enum.map(&elem(&1, 0))
 
       person_id = person.id
@@ -69,9 +72,9 @@ defmodule QueryEx.Engine.Builder.Test do
       filter = %Filter{field: "organization.name", operator: :=, value: person.organization.name}
 
       response =
-        %Request{schema: Dummy.Person, filters: [filter]}
-        |> Builder.build
-        |> Dummy.Repo.all
+        %Request{query: to_query(Dummy.Person), filters: [filter]}
+        |> Builder.build()
+        |> Dummy.Repo.all()
         |> Enum.map(&elem(&1, 0))
 
       person_id = person.id
@@ -85,21 +88,22 @@ defmodule QueryEx.Engine.Builder.Test do
       order = %Order{field: "email", direction: :asc}
 
       response =
-        %Request{schema: Dummy.Person, sorts: [order]}
-        |> Builder.build
-        |> Dummy.Repo.all
-        |> Enum.map(&(elem(&1, 0).email))
+        %Request{query: to_query(Dummy.Person), sorts: [order]}
+        |> Builder.build()
+        |> Dummy.Repo.all()
+        |> Enum.map(&elem(&1, 0).email)
 
       assert ["a", "b"] == response
 
       # Test in reverse
       order = %Order{field: "email", direction: :desc}
+
       response =
-        %Request{schema: Dummy.Person, sorts: [order]}
-        |> Builder.build
-        |> Dummy.Repo.all
+        %Request{query: to_query(Dummy.Person), sorts: [order]}
+        |> Builder.build()
+        |> Dummy.Repo.all()
         |> Enum.map(&elem(&1, 0))
-        |> Enum.map(&(&1.email))
+        |> Enum.map(& &1.email)
 
       assert ["b", "a"] == response
     end

@@ -27,7 +27,7 @@ defmodule QueryEx.Engine.FiltererTest do
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query.email == person.email
     end
@@ -36,19 +36,21 @@ defmodule QueryEx.Engine.FiltererTest do
       person = insert(:person, organization: nil)
 
       filter = %Filter{field: organization_field, operator: :=, value: nil}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query.id == person.id
 
       # Negative test
       filter = %Filter{field: email_field, operator: :=, value: nil}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query == nil
     end
@@ -59,21 +61,21 @@ defmodule QueryEx.Engine.FiltererTest do
 
       associations =
         "organization"
-        |> Association.from_path
-        |> Association.assign_bindings
+        |> Association.from_path()
+        |> Association.assign_bindings(0)
 
       field =
         "organization.name"
-        |> Field.from_path
+        |> Field.from_path()
         |> Field.set_association(associations)
-      
+
       filter = %Filter{field: field, operator: :=, value: organization.name}
 
       query =
         Dummy.Person
         |> Joiner.join(Enum.at(associations, 0))
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query.email == person.email
     end
@@ -83,19 +85,21 @@ defmodule QueryEx.Engine.FiltererTest do
 
       # Positive test
       filter = %Filter{field: field, operator: :!=, value: person.email <> "1"}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query.id == person.id
 
       # Negative test
       filter = %Filter{field: field, operator: :!=, value: person.email}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query == nil
     end
@@ -105,19 +109,21 @@ defmodule QueryEx.Engine.FiltererTest do
 
       # Positive test
       filter = %Filter{field: field, operator: :!=, value: nil}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query.id == person.id
 
       # Negative test
       filter = %Filter{field: organization_field, operator: :!=, value: nil}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query == nil
     end
@@ -127,41 +133,45 @@ defmodule QueryEx.Engine.FiltererTest do
 
       # Positive test
       filter = %Filter{field: field, operator: :>, value: person.id - 1}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query.id == person.id
 
       # Negative test
       filter = %Filter{field: field, operator: :>, value: person.id}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query == nil
     end
-    
+
     test "with <", %{id_field: field} do
       person = insert(:person)
 
       # Positive test
       filter = %Filter{field: field, operator: :<, value: person.id + 1}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query.id == person.id
 
       # Negative test
       filter = %Filter{field: field, operator: :<, value: person.id}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query == nil
     end
@@ -171,19 +181,21 @@ defmodule QueryEx.Engine.FiltererTest do
 
       # Positive test
       filter = %Filter{field: field, operator: :like, value: "like%"}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query.id == person.id
 
       # Negative test
       filter = %Filter{field: field, operator: :like, value: "notlike%"}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query == nil
     end
@@ -193,64 +205,69 @@ defmodule QueryEx.Engine.FiltererTest do
 
       # Positive test
       filter = %Filter{field: field, operator: :not_like, value: "notlike%"}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query.id == person.id
 
       # Negative test
       filter = %Filter{field: field, operator: :not_like, value: "like%"}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query == nil
     end
 
-    
     test "with >=", %{id_field: field} do
       person = insert(:person)
 
       # Positive test
       filter = %Filter{field: field, operator: :>=, value: person.id - 1}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query.id == person.id
 
       # Negative test
       filter = %Filter{field: field, operator: :>=, value: person.id + 1}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query == nil
     end
-    
+
     test "with <=", %{id_field: field} do
       person = insert(:person)
 
       # Positive test
       filter = %Filter{field: field, operator: :<=, value: person.id + 1}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query.id == person.id
 
       # Negative test
       filter = %Filter{field: field, operator: :<=, value: person.id - 1}
+
       query =
         Dummy.Person
         |> Filterer.filter(filter)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query == nil
     end

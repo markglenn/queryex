@@ -13,14 +13,14 @@ defmodule QueryEx.Engine.JoinerTest do
 
       associations =
         "organization"
-        |> Association.from_path
-        |> Association.assign_bindings
+        |> Association.from_path()
+        |> Association.assign_bindings(0)
 
       query_person =
         Dummy.Person
         |> Joiner.join(List.first(associations))
         |> where([_, o], o.name == ^organization.name)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query_person.id == person.id
     end
@@ -32,18 +32,17 @@ defmodule QueryEx.Engine.JoinerTest do
 
       associations =
         "organization.country"
-        |> Association.from_path
-        |> Association.assign_bindings
+        |> Association.from_path()
+        |> Association.assign_bindings(0)
 
       query_person =
         Dummy.Person
         |> Joiner.join(Enum.at(associations, 0))
         |> Joiner.join(Enum.at(associations, 1))
         |> where([_, _, c], c.name == ^country.name)
-        |> Dummy.Repo.one
+        |> Dummy.Repo.one()
 
       assert query_person.id == person.id
     end
   end
 end
-

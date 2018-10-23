@@ -46,7 +46,7 @@ defmodule QueryEx.Mixfile do
   end
 
   defp aliases do
-    ["test": ["ecto.create --quiet", "ecto.migrate", "test"]]
+    [test: ["ecto.create --quiet", "ecto.migrate", "test"]]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/dummy", "test/support"]

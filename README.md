@@ -8,7 +8,7 @@ Ecto query using dynamic query parameters.
 
 ```
 MyModels.User
-|> QueryEx.from_schema
+|> QueryEx.from_query
 |> QueryEx.side_load("organization.country")
 |> QueryEx.filter("name", :like, "John D%")
 |> QueryEx.filter("organization.name", :=, "Test Organization")
@@ -37,7 +37,7 @@ end
 ```
 query =
   MyModels.User
-  |> QueryEx.from_schema
+  |> QueryEx.from_query
   |> QueryEx.side_load("organization.country")
   |> QueryEx.filter("name", :like, "John D%")
   |> QueryEx.build
@@ -48,7 +48,7 @@ query =
 
 ## Why?
 
-We use this system internally for creating our API.  We needed something 
+We use this system internally for creating our API.  We needed something
 dynamic, but still powerful enough to handle side loading, joining, and
 traditional SQL filtering.
 
